@@ -1,0 +1,31 @@
+﻿<Project ToolsVersion="4.0" DefaultTargets="" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+    <UsingTask TaskName="SqlBuild.MsBuild.SqlBuilderTask" AssemblyFile="SqlBuild.MsBuild.dll"></UsingTask>
+
+    <!-- Here is the structure of the properties and item groups that is necessary -->
+    <!--
+    <PropertyGroup>
+        <SqlBuild_DefaultUserName>myUser</SqlBuild_DefaultUsername>
+        <SqlBuild_DefaultPassword>myPassword</SqlBuild_DefaultPassword>
+        <SqlBuild_DefaultIntegratedSecurity>false</SqlBuild_DefaultIntegratedSecurity>
+
+        <SqlBuild_DefaultServer>myServer</SqlBuild_DefaultServer>
+        <SqlBuild_DefaultDatabase>myDatabase</SqlBuild_DefaultDatabase>
+        <SqlBuild_DefaultSchema>mySchema</SqlBuild_DefaultSchema>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <SqlBuild_Scripts Include="myScripts"></SqlBuild_Scripts>
+    </ItemGroup>
+    -->
+    
+    <Target Name="ExecuteSqlBuild">
+        <SqlBuild.MsBuild.SqlBuilderTask DefaultUserName="$(SqlBuild_DefaultUserName)"
+                                         DefaultPassword="$(SqlBuild_DefaultPassword)"
+                                         DefaultIntegratedSecurity="$(SqlBuild_DefaultIntegratedSecurity)"
+                                         DefaultServer="$(SqlBuild_DefaultServer)"
+                                         DefaultDatabase="$(SqlBuild_DefaultDatabase)"
+                                         DefaultSchema="$(SqlBuild_DefaultSchema)"
+                                         Scripts="$(SqlBuild_Scripts)"></SqlBuild.MsBuild.SqlBuilderTask>
+    </Target>
+</Project>

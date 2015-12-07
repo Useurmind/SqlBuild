@@ -43,16 +43,19 @@ namespace SqlBuild.MsBuild
 
         public override bool Execute()
         {
-            defaultLogin = new SqlLogin()
-                               {
-                                   UserName = DefaultUserName,
-                                   Password = DefaultPassword,
-                                   IntegratedSecurity = DefaultIntegratedSecurity
-                               };
+            defaultLogin = new SqlLogin();
 
-            defaultConnection = new SqlConnection()
+            if (DefaultIntegratedSecurity)
+            {
+                defaultLogin.SetIntegratedSecurity();
+            }
+            else
+            {
+                defaultLogin.SetUsernamePassword(DefaultUserName, DefaultPassword);
+            }
+
+            defaultConnection = new SqlConnection(DefaultServer)
                                     {
-                                        Server = DefaultServer,
                                         Database = DefaultDatabase,
                                         Schema = DefaultSchema
                                     };
@@ -80,9 +83,8 @@ namespace SqlBuild.MsBuild
 
             var connection = GetConnection(taskItem);
 
-            var script = new SqlScript()
+            var script = new SqlScript(taskItem.GetMetadata("Identity"))
                              {
-                                 Identity = taskItem.GetMetadata("Identity"),
                                  Connection = connection,
                                  Login = login
                              };
@@ -125,12 +127,18 @@ namespace SqlBuild.MsBuild
             if (!string.IsNullOrEmpty(integratedSecurityString) ||
                 !string.IsNullOrEmpty(userName))
             {
-                login = new SqlLogin()
-                            {
-                                UserName = taskItem.GetMetadata(SqlScriptTaskItemMetaData.UserName),
-                                Password = taskItem.GetMetadata(SqlScriptTaskItemMetaData.Password),
-                                IntegratedSecurity = string.IsNullOrEmpty(integratedSecurityString) ? false : bool.Parse(integratedSecurityString)
-                            };
+                login = new SqlLogin();
+
+                if (string.IsNullOrEmpty(integratedSecurityString) || !bool.Parse(integratedSecurityString))
+                {
+                    login.SetUsernamePassword(
+                        taskItem.GetMetadata(SqlScriptTaskItemMetaData.UserName),
+                        taskItem.GetMetadata(SqlScriptTaskItemMetaData.Password));
+                }
+                else
+                {
+                    login.SetIntegratedSecurity();
+                }
             }
 
             return login;

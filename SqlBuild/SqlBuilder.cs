@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using SqlBuild.Deployment;
 using SqlBuild.Model;
+using SqlBuild.Validation;
 
 namespace SqlBuild
 {
@@ -40,6 +42,17 @@ namespace SqlBuild
 
         public bool Execute()
         {
+            foreach (var script in scripts)
+            {
+                new ScriptExistsCheck(script);
+            }
+
+            var executor = new ScriptExecutor();
+            foreach (var script in scripts)
+            {
+                executor.Execute(script);
+            }
+
             return true;
         }
     }
