@@ -10,3 +10,5 @@
 /SqlBuild.MsBuild/bin
 /SqlBuild.MsBuild.Test/obj
 /SqlBuild.MsBuild.Test/bin
+/SqlBuild.Test/obj
+/SqlBuild.Test/bin

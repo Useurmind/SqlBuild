@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Deployment\ConnectionStringFactory.cs" />
     <Compile Include="Model\SqlConnection.cs" />
     <Compile Include="Model\SqlLogin.cs" />
     <Compile Include="Model\SqlScript.cs" />
