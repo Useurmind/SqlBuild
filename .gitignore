@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/packages
+/SqlBuild/bin/Debug
+/SqlBuild/obj
+/SqlBuild/bin
+/SqlBuild.MsBuild/obj
+/SqlBuild.MsBuild/bin
+/SqlBuild.MsBuild.Test/obj
+/SqlBuild.MsBuild.Test/bin
