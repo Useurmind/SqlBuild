@@ -14,19 +14,15 @@ namespace SqlBuild.MsBuild
     {
         private ISqlBuilder sqlBuilder;
 
-        private SqlLogin defaultLogin;
-        private SqlConnection defaultConnection;
-
         private SqlBuilderConfiguration configuration;
 
-        public string DefaultServer { get; set; }
-        public string DefaultDatabase { get; set; }
-        public string DefaultSchema { get; set; }
+        public string ActiveGlobalConfiguration { get; set; }
 
-        public string DefaultUserName { get; set; }
-        public string DefaultPassword { get; set; }
-        public bool DefaultIntegratedSecurity { get; set; }
-
+        public ITaskItem[] GlobalConfigurations { get; set; }
+        public ITaskItem[] ScriptConfigurations { get; set; }
+        public ITaskItem[] Connections { get; set; }
+        public ITaskItem[] Logins { get; set; }
+        public ITaskItem[] Sessions { get; set; }
         public ITaskItem[] Scripts { get; set; }
 
         public SqlBuilderTask()

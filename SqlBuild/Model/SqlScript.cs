@@ -11,9 +11,9 @@ namespace SqlBuild.Model
     {
         public string Identity { get; set; }
 
-        public SqlLogin Login { get; set; }
+        public SqlSession Session { get; set; }
 
-        public SqlConnection Connection { get; set; }
+        public SqlScriptConfiguration Configuration { get; set; }
 
         public SqlScript(string identity)
         {

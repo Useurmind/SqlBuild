@@ -1,31 +1,136 @@
 ﻿<Project ToolsVersion="4.0" DefaultTargets="" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    
+
     <UsingTask TaskName="SqlBuild.MsBuild.SqlBuilderTask" AssemblyFile="SqlBuild.MsBuild.dll"></UsingTask>
 
     <!-- Here is the structure of the properties and item groups that is necessary -->
+
     <!--
-    <PropertyGroup>
-        <SqlBuild_DefaultUserName>myUser</SqlBuild_DefaultUsername>
-        <SqlBuild_DefaultPassword>myPassword</SqlBuild_DefaultPassword>
-        <SqlBuild_DefaultIntegratedSecurity>false</SqlBuild_DefaultIntegratedSecurity>
-
-        <SqlBuild_DefaultServer>myServer</SqlBuild_DefaultServer>
-        <SqlBuild_DefaultDatabase>myDatabase</SqlBuild_DefaultDatabase>
-        <SqlBuild_DefaultSchema>mySchema</SqlBuild_DefaultSchema>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <SqlBuild_Scripts Include="myScripts"></SqlBuild_Scripts>
-    </ItemGroup>
+        Global Configuration
+        ====================
+        The global configuration includes settings that have only a global meaning.
+        At each run you can only choose one of these configurations.
     -->
-    
+    <PropertyGroup>
+        <SqlActiveGlobalConfiguration>Default</SqlActiveGlobalConfiguration>
+    </PropertyGroup>
+    <ItemGroup>
+        <SqlGlobalConfiguration Include="Default">
+            <SomeSetting>someValue</SomeSetting>
+            <SomeOtherSetting>someOtherValue</SomeOtherSetting>
+        </SqlGlobalConfiguration>
+    </ItemGroup>
+
+    <!--
+        Script Configurations
+        ==============
+        Script Configurations hold information beside the session information that is important to determine how to 
+        handle your scripts.
+        The configuration marked with name "Default" is automatically applied to all scripts that have no other
+        configuration applied.
+    -->
+    <ItemGroup>
+        <SqlScriptConfiguration Include="Default">
+            <SomeSetting>SomeValue</SomeSetting>
+            <SomeSetting2>SomeValue2</SomeSetting2>
+        </SqlScriptConfiguration>
+        <SqlScriptConfiguration Include="ScriptConfig1">
+            <SomeSetting>SomeValue3</SomeSetting>
+            <SomeSetting2>SomeValue4</SomeSetting2>
+        </SqlScriptConfiguration>
+    </ItemGroup>
+
+    <!--
+        Connections
+        ===========
+        Connections define to which servers/databases/schemas you can connect and
+        deploy your scripts.
+    -->
+    <ItemGroup>
+        <SqlConnection Include="Default">
+            <Server>defaultServer</Server>
+            <Database>defaultDatabase</Database>
+            <Schema>defaultSchema</Schema>
+        </SqlConnection>
+
+        <SqlConnection Include="Connection1">
+            <Server>myServer</Server>
+            <Database>myDatabase</Database>
+            <Schema>mySchema</Schema>
+        </SqlConnection>
+    </ItemGroup>
+
+    <!--
+        Logins
+        ======
+        You can define the following types of logins:
+        - integrated security (login using the current windows user)
+        - login with encrypted password (password retrieved from the password store)
+        - login with plain text password
+    -->
+    <ItemGroup>
+        <SqlLogin Include="Default">
+            <UserName>globalDefaultUser</UserName>
+            <Password>passwordForDefaultUser</Password>
+        </SqlLogin>
+
+        <SqlLogin Include="Login1">
+            <IntegratedSecurity>true</IntegratedSecurity>
+        </SqlLogin>
+        <SqlLogin Include="Login2">
+            <UserName>UserWithEncryptedPassword</UserName>
+        </SqlLogin>
+        <SqlLogin Include="Login3">
+            <UserName>UserWithPlainTextPassword</UserName>
+            <Password>MyPassword</Password>
+        </SqlLogin>
+
+        <SqlPasswordStore Include="Passwords.store"></SqlPasswordStore>
+    </ItemGroup>
+
+    <!--
+        Sessions
+        ========
+        Sessions represent when one user uses a specific connection.
+        Therefore, they have a connection and a login applied.
+        The session marked with name "Default" is applied to all scripts when no other session
+        is applied to them.
+    -->
+    <ItemGroup>
+        <SqlSession Include="Default">
+            <Connection>Default</Connection>
+            <Login>Default</Login>
+        </SqlSession>
+
+        <SqlSession Include="Session1">
+            <Connection>Connection1</Connection>
+            <Login>Login2</Login>
+        </SqlSession>
+    </ItemGroup>
+
+    <!--
+        Scripts
+        =======
+        You use SqlBuild to analyze and deploy sql scripts.
+        Per script you can define a session that should be used to deploy it.
+    -->
+    <ItemGroup>
+        <SqlScripts Include="myScripts">
+            <Session>Default</Session>
+        </SqlScripts>
+
+        <SqlScripts Include="moreScripts">
+            <Session>Session1</Session>
+        </SqlScripts>
+    </ItemGroup>
+
+
     <Target Name="ExecuteSqlBuild">
-        <SqlBuild.MsBuild.SqlBuilderTask DefaultUserName="$(SqlBuild_DefaultUserName)"
-                                         DefaultPassword="$(SqlBuild_DefaultPassword)"
-                                         DefaultIntegratedSecurity="$(SqlBuild_DefaultIntegratedSecurity)"
-                                         DefaultServer="$(SqlBuild_DefaultServer)"
-                                         DefaultDatabase="$(SqlBuild_DefaultDatabase)"
-                                         DefaultSchema="$(SqlBuild_DefaultSchema)"
-                                         Scripts="$(SqlBuild_Scripts)"></SqlBuild.MsBuild.SqlBuilderTask>
+        <SqlBuild.MsBuild.SqlBuilderTask ActiveGlobalConfiguration="$(SqlActiveGlobalConfiguration)"
+                                         GlobalConfigurations="@(SqlGlobalConfiguration)"
+                                         ScriptConfigurations="@(SqlScriptConfiguration)"
+                                         Connections="@(SqlConnection)"
+                                         Logins="@(SqlLogin)"
+                                         Sessions="@(SqlSession)"
+                                         Scripts="@(SqlScripts)"></SqlBuild.MsBuild.SqlBuilderTask>
     </Target>
 </Project>

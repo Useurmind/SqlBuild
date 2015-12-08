@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlBuild.Model
 {
-    public class SqlLogin
+    public class SqlLogin : KeyedModel
     {
         public string UserName { get; private set; }
         public string Password { get; private set; }
