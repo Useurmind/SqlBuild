@@ -7,18 +7,13 @@ using System.Threading.Tasks;
 
 namespace SqlBuild.Model
 {
-    public class SqlScript
+    public class SqlScript : KeyedModel
     {
         public string Identity { get; set; }
 
         public SqlSession Session { get; set; }
 
         public SqlScriptConfiguration Configuration { get; set; }
-
-        public SqlScript(string identity)
-        {
-            Identity = identity;
-        }
 
         public string GetSqlText()
         {

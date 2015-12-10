@@ -115,6 +115,7 @@
     -->
     <ItemGroup>
         <SqlScripts Include="myScripts">
+            <Config>Default</Config>
             <Session>Default</Session>
         </SqlScripts>
 
