@@ -171,20 +171,23 @@ namespace SqlBuild.MsBuild.Test
         [Fact]
         public void single_script_mapping_with_session_and_configuration_is_mapped_correctly()
         {
+            string scriptMappingKey = "asflfdjgsdl";
             string scriptMappingPattern = "Adsdfgsdfg";
             string sessionKey = "sdflkslödfsgd";
             string configurationKey= "dfshdgjhfdghjfhg";
 
-            var mappingItem = new TaskItem(scriptMappingPattern);
+            var mappingItem = new TaskItem(scriptMappingKey);
+            mappingItem.SetMetadata(ModelExtensions.GetMetadataName<SqlScriptMapping, string>(x => x.ScriptPattern), scriptMappingPattern);
             mappingItem.SetMetadata(ModelExtensions.GetMetadataName<SqlScriptMapping, string>(x => x.SessionKey), sessionKey);
             mappingItem.SetMetadata(ModelExtensions.GetMetadataName<SqlScriptMapping, string>(x => x.ConfigurationKey), configurationKey);
 
             input.ScriptMappings = new[] { mappingItem };
 
             mapper.MapTo(input, output);
+            
+            var mapping = output.ScriptMappings[scriptMappingKey];
 
-            var mapping = output.ScriptMappings.First(x => x.ScriptPattern == scriptMappingPattern);
-
+            Assert.Equal(scriptMappingPattern, mapping.ScriptPattern);
             Assert.Equal(sessionKey, mapping.SessionKey);
             Assert.Equal(configurationKey, mapping.ConfigurationKey);
         }

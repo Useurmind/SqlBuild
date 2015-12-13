@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlBuild.Model
 {
-    public class SqlScriptMapping : IModel
+    public class SqlScriptMapping : KeyedModel
     {
         /// <summary>
         /// Gets or sets pattern that determines the scripts to which this mapping is applied.

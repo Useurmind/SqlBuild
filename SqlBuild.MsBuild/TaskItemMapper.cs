@@ -53,6 +53,15 @@ namespace SqlBuild.MsBuild
                 SetKeyIfNotEmpty(sessionItem, session, session.GetProperty(x => x.ConnectionKey));
             }
 
+            foreach (var scriptMappingItem in input.ScriptMappings)
+            {
+                var scriptMapping = setup.ScriptMappings.GetOrCreate(scriptMappingItem.ItemSpec);
+
+                SetIfNotEmpty(scriptMappingItem, scriptMapping, scriptMapping.GetProperty(x => x.ScriptPattern));
+                SetKeyIfNotEmpty(scriptMappingItem, scriptMapping, scriptMapping.GetProperty(x => x.SessionKey));
+                SetKeyIfNotEmpty(scriptMappingItem, scriptMapping, scriptMapping.GetProperty(x => x.ConfigurationKey));
+            }
+
             foreach (var scriptItem in input.Scripts)
             {
                 var script = new SqlScript() { ItemSpec = scriptItem.ItemSpec };
@@ -60,16 +69,6 @@ namespace SqlBuild.MsBuild
                 SetIfNotEmpty(scriptItem, script, script.GetProperty(x => x.Identity));
 
                 setup.Scripts.Add(script);
-            }
-
-            foreach (var scriptMappingItem in input.ScriptMappings)
-            {
-                var scriptMapping = new SqlScriptMapping() { ScriptPattern = scriptMappingItem.ItemSpec };
-
-                SetKeyIfNotEmpty(scriptMappingItem, scriptMapping, scriptMapping.GetProperty(x => x.SessionKey));
-                SetKeyIfNotEmpty(scriptMappingItem, scriptMapping, scriptMapping.GetProperty(x => x.ConfigurationKey));
-
-                setup.ScriptMappings.Add(scriptMapping);
             }
         }
 

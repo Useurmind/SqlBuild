@@ -111,16 +111,20 @@
         Script Mappings
         ===============
         Script mappings are used to associate sessions and script configurations with sql scripts.
-        The include expression is used to determine the scripts that should be mapped to the given session
+        The ScriptPattern expression is used to determine the scripts that should be mapped to the given session
         and configuration.
-        The include expression is a regex that is applied to the identity of the script.
+        The ScriptPattern expression is a regex that is applied to the identity of the script.
+        Mappings are evaluated in order they appear. Once a script was mapped it will not be available to mappings
+        that follow later on. The default mapping is applied last.
     -->
     <ItemGroup>
-        <SqlScriptMapping Include="myScript1">
+        <SqlScriptMapping Include="Default">
+            <ScriptPattern>myScript1</ScriptPattern>
             <Config>Default</Config>
             <Session>Default</Session>
         </SqlScriptMapping>
-        <SqlScriptMapping>
+        <SqlScriptMapping Include="MyPattern">
+            <ScriptPattern>anotherScript</ScriptPattern>
             <Session>Session1</Session>
         </SqlScriptMapping>
     </ItemGroup>

@@ -15,24 +15,42 @@ namespace SqlBuild.Model
         public IDictionary<string, SqlScriptConfiguration> ScriptConfigurations { get; private set; }
         public IDictionary<string, SqlLogin> Logins { get; private set; }
         public IDictionary<string, SqlSession> Sessions { get; private set; }
+        public IDictionary<string, SqlScriptMapping> ScriptMappings { get; private set; }
         public IList<SqlScript> Scripts { get; private set; }
-        public IList<SqlScriptMapping> ScriptMappings { get; private set; }
 
         public SqlBuildSetup()
         {
+            ActiveGlobalConfiguration = Constants.DefaultKey;
+
             Connections = new Dictionary<string, SqlConnection>();
             GlobalConfigurations = new Dictionary<string, SqlGlobalConfiguration>();
             ScriptConfigurations = new Dictionary<string, SqlScriptConfiguration>();
             Logins = new Dictionary<string, SqlLogin>();
             Scripts = new List<SqlScript>();
             Sessions = new Dictionary<string, SqlSession>();
-            ScriptMappings = new List<SqlScriptMapping>();
+            ScriptMappings = new Dictionary<string, SqlScriptMapping>();
 
             Connections.Add(Constants.DefaultKey, new SqlConnection() { Key = Constants.DefaultKey });
             GlobalConfigurations.Add(Constants.DefaultKey, new SqlGlobalConfiguration() { Key = Constants.DefaultKey });
             ScriptConfigurations.Add(Constants.DefaultKey, new SqlScriptConfiguration() { Key = Constants.DefaultKey });
             Logins.Add(Constants.DefaultKey, new SqlLogin() { Key = Constants.DefaultKey });
-            Sessions.Add(Constants.DefaultKey, new SqlSession() { Key = Constants.DefaultKey });
+            Sessions.Add(Constants.DefaultKey, new SqlSession()
+                                                   {
+                                                       Key = Constants.DefaultKey,
+                                                       ConnectionKey = Constants.DefaultKey,
+                                                       LoginKey= Constants.DefaultKey,
+                                                   });
+            ScriptMappings.Add(Constants.DefaultKey, new SqlScriptMapping()
+                                                         {
+                                                             Key = Constants.DefaultKey,
+                                                             SessionKey = Constants.DefaultKey,
+                                                             ConfigurationKey = Constants.DefaultKey
+                                                         });
+        }
+
+        public void ConnectGraph()
+        {
+
         }
     }
 }
