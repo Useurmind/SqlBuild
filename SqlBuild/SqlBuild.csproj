@@ -53,18 +53,24 @@
     <Compile Include="Deployment\ConnectionStringFactory.cs" />
     <Compile Include="Deployment\ScriptExecutor.cs" />
     <Compile Include="Model\Constants.cs" />
+    <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\KeyedModel.cs" />
+    <Compile Include="Model\ModelExtensions.cs" />
     <Compile Include="Model\SqlBuildSetup.cs" />
     <Compile Include="Model\SqlConnection.cs" />
     <Compile Include="Model\SqlGlobalConfiguration.cs" />
     <Compile Include="Model\SqlLogin.cs" />
     <Compile Include="Model\SqlScript.cs" />
     <Compile Include="Model\SqlScriptConfiguration.cs" />
+    <Compile Include="Model\SqlScriptMapping.cs" />
     <Compile Include="Model\SqlSession.cs" />
     <Compile Include="SqlBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlBuilderConfiguration.cs" />
+    <Compile Include="Utility\CommonFunctions.cs" />
     <Compile Include="Utility\DictionaryExtensions.cs" />
+    <Compile Include="Utility\Property.cs" />
+    <Compile Include="Utility\ValidatedNotNullAttribute.cs" />
     <Compile Include="Validation\ScriptExistsCheck.cs" />
   </ItemGroup>
   <ItemGroup>

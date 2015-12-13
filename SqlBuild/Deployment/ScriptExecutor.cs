@@ -15,12 +15,12 @@ namespace SqlBuild.Deployment
     {
         public void Execute(SqlScript script)
         {
-            string connectionString = new ConnectionStringFactory().CreateConnectionString(script.Connection, script.Login);
+            //string connectionString = new ConnectionStringFactory().CreateConnectionString(script.Connection, script.Login);
 
-            var connection = new System.Data.SqlClient.SqlConnection(connectionString);
-            var server = new Server(new ServerConnection(connection));
+            //var connection = new System.Data.SqlClient.SqlConnection(connectionString);
+            //var server = new Server(new ServerConnection(connection));
 
-            server.ConnectionContext.ExecuteNonQuery(script.GetSqlText());
+            //server.ConnectionContext.ExecuteNonQuery(script.GetSqlText());
         }
     }
 }

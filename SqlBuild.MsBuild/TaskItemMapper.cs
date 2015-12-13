@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,18 +20,18 @@ namespace SqlBuild.MsBuild
             {
                 var login = setup.Logins.GetOrCreate(loginItem.ItemSpec);
 
-                SetIfNotEmpty(loginItem, login, "UserName");
-                SetIfNotEmpty(loginItem, login, "Password");
-                SetIfNotEmpty(loginItem, login, "IntegratedSecurity");
+                SetIfNotEmpty(loginItem, login, login.GetProperty(x => x.UserName));
+                SetIfNotEmpty(loginItem, login, login.GetProperty(x => x.Password));
+                SetIfNotEmpty(loginItem, login, login.GetProperty(x => x.IntegratedSecurity));
             }
 
             foreach (var connectionItem in input.Connections)
             {
                 var connection = setup.Connections.GetOrCreate(connectionItem.ItemSpec);
 
-                SetIfNotEmpty(connectionItem, connection, "Server");
-                SetIfNotEmpty(connectionItem, connection, "Database");
-                SetIfNotEmpty(connectionItem, connection, "Schema");
+                SetIfNotEmpty(connectionItem, connection, connection.GetProperty(x => x.Server));
+                SetIfNotEmpty(connectionItem, connection, connection.GetProperty(x => x.Database));
+                SetIfNotEmpty(connectionItem, connection, connection.GetProperty(x => x.Schema));
             }
 
             foreach (var globalConfigItem in input.GlobalConfigurations)
@@ -44,30 +45,52 @@ namespace SqlBuild.MsBuild
                 var scriptConfig = setup.ScriptConfigurations.GetOrCreate(scriptConfigItem.ItemSpec);
             }
 
-            foreach (var scriptItem in input.Scripts)
-            {
-                var script = setup.Scripts.GetOrCreate(scriptItem.ItemSpec);
-
-                SetIfNotEmpty(scriptItem, script, "Identity");
-                SetIfNotEmpty(scriptItem, script, "Session");
-                SetIfNotEmpty(scriptItem, script, "Config");
-            }
-
             foreach (var sessionItem in input.Sessions)
             {
                 var session = setup.Sessions.GetOrCreate(sessionItem.ItemSpec);
 
-                SetIfNotEmpty(sessionItem, session, "Login");
-                SetIfNotEmpty(sessionItem, session, "Connection");
+                SetKeyIfNotEmpty(sessionItem, session, session.GetProperty(x => x.LoginKey));
+                SetKeyIfNotEmpty(sessionItem, session, session.GetProperty(x => x.ConnectionKey));
+            }
+
+            foreach (var scriptItem in input.Scripts)
+            {
+                var script = new SqlScript() { ItemSpec = scriptItem.ItemSpec };
+
+                SetIfNotEmpty(scriptItem, script, script.GetProperty(x => x.Identity));
+
+                setup.Scripts.Add(script);
+            }
+
+            foreach (var scriptMappingItem in input.ScriptMappings)
+            {
+                var scriptMapping = new SqlScriptMapping() { ScriptPattern = scriptMappingItem.ItemSpec };
+
+                SetKeyIfNotEmpty(scriptMappingItem, scriptMapping, scriptMapping.GetProperty(x => x.SessionKey));
+                SetKeyIfNotEmpty(scriptMappingItem, scriptMapping, scriptMapping.GetProperty(x => x.ConfigurationKey));
+
+                setup.ScriptMappings.Add(scriptMapping);
             }
         }
 
-        private static void SetIfNotEmpty(ITaskItem item, KeyedModel model, string propertyName)
+        private static void SetIfNotEmpty<T>(ITaskItem item, T model, PropertyInfo propertyInfo)
+            where T : IModel
         {
-            var metaData = item.GetMetadata(propertyName);
+            SetIfNotEmpty(item, model, model.GetMetadataName(propertyInfo.Name), propertyInfo);
+        }
+
+        private static void SetKeyIfNotEmpty<T>(ITaskItem item, T model, PropertyInfo propertyInfo)
+            where T : IModel
+        {
+            SetIfNotEmpty(item, model, propertyInfo);
+        }
+
+        private static void SetIfNotEmpty<T>(ITaskItem item, T model, string metaDataKey, PropertyInfo propertyInfo)
+        {
+            var metaData = item.GetMetadata(metaDataKey);
             if (!string.IsNullOrEmpty(metaData))
             {
-                model.GetType().GetProperty(propertyName).SetValue(model, metaData, null);
+                propertyInfo.SetValue(model, metaData, null);
             }
         }
     }

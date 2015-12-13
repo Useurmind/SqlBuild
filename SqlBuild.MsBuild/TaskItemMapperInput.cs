@@ -13,5 +13,17 @@ namespace SqlBuild.MsBuild
         public IEnumerable<ITaskItem> Logins { get; set; }
         public IEnumerable<ITaskItem> Scripts { get; set; }
         public IEnumerable<ITaskItem> Sessions { get; set; }
+        public IEnumerable<ITaskItem> ScriptMappings { get; set; }
+
+        public TaskItemMapperInput()
+        {
+            Connections = new List<ITaskItem>();
+            GlobalConfigurations = new List<ITaskItem>();
+            ScriptConfigurations = new List<ITaskItem>();
+            Logins = new List<ITaskItem>();
+            Scripts = new List<ITaskItem>();
+            Sessions = new List<ITaskItem>();
+            ScriptMappings = new List<ITaskItem>();
+        }
     }
 }

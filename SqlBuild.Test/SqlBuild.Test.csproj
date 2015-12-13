@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Deployment\ConnectionStringFactoryTest.cs" />
+    <Compile Include="Model\ModelExtensionsTest.cs" />
     <Compile Include="Model\SqlLoginTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Syntax\ParserTest.cs" />

@@ -8,6 +8,9 @@ namespace SqlBuild.Model
 {
     public class SqlSession : KeyedModel
     {
+        public string LoginKey { get; set; }
+        public string ConnectionKey { get; set; }
+
         public SqlLogin Login { get; set; }
         public SqlConnection Connection { get; set; }
     }

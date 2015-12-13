@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="SqlBuilderTaskTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskItemMapperTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

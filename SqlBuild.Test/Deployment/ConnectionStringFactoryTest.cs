@@ -24,11 +24,15 @@ namespace SqlBuild.Test.Deployment
         public void server_database_integratedsecurity()
         {
             var expectedConnectionString = "Data Source=server;Initial Catalog=database;Integrated Security=true";
-            var connection = new SqlConnection("server")
+            var connection = new SqlConnection()
                                  {
+                                     Server = "server",
                                      Database = "database"
                                  };
-            var login = new SqlLogin();
+            var login = new SqlLogin()
+                            {
+                                IntegratedSecurity = Constants.IntegratedSecurity.True
+                            };
 
             var connectionString = factory.CreateConnectionString(connection, login);
 
@@ -39,8 +43,14 @@ namespace SqlBuild.Test.Deployment
         public void server_nodatabase_integratedsecurity()
         {
             var expectedConnectionString = "Data Source=server;Integrated Security=true";
-            var connection = new SqlConnection("server");
-            var login = new SqlLogin();
+            var connection = new SqlConnection()
+                                 {
+                                     Server = "server"
+                                 };
+            var login = new SqlLogin()
+                            {
+                                IntegratedSecurity = Constants.IntegratedSecurity.True
+                            };
 
             var connectionString = factory.CreateConnectionString(connection, login);
 
@@ -51,12 +61,14 @@ namespace SqlBuild.Test.Deployment
         public void server_database_user()
         {
             var expectedConnectionString = "Data Source=server;Initial Catalog=database;User Id=user;Password=password";
-            var connection = new SqlConnection("server")
+            var connection = new SqlConnection()
             {
+                Server = "server",
                 Database = "database"
             };
             var login = new SqlLogin();
-            login.SetUsernamePassword("user", "password");
+            login.UserName = "user";
+            login.Password = "password";
 
             var connectionString = factory.CreateConnectionString(connection, login);
 
@@ -67,9 +79,13 @@ namespace SqlBuild.Test.Deployment
         public void server_nodatabase_user()
         {
             var expectedConnectionString = "Data Source=server;User Id=user;Password=password";
-            var connection = new SqlConnection("server");
+            var connection = new SqlConnection()
+                                 {
+                                     Server = "server"
+                                 };
             var login = new SqlLogin();
-            login.SetUsernamePassword("user", "password");
+            login.UserName = "user";
+            login.Password = "password";
 
             var connectionString = factory.CreateConnectionString(connection, login);
 

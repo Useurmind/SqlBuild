@@ -8,37 +8,16 @@ namespace SqlBuild.Model
 {
     public class SqlLogin : KeyedModel
     {
-        public string UserName { get; private set; }
-        public string Password { get; private set; }
-        public bool IntegratedSecurity { get; private set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string IntegratedSecurity { get; set; }
 
-        public SqlLogin()
+        public bool UseIntegratedSecurity
         {
-            this.SetIntegratedSecurity();
-        }
-
-        public void SetUsernamePassword(string username, string password)
-        {
-            if (string.IsNullOrEmpty(username))
+            get
             {
-                throw new Exception("Provided username must not be empty");
+                return !string.IsNullOrEmpty(IntegratedSecurity);
             }
-
-            if (string.IsNullOrEmpty(password))
-            {
-                throw new Exception("Provided password must not be empty");
-            }
-
-            UserName = username;
-            Password = password;
-            IntegratedSecurity = false;
-        }
-
-        public void SetIntegratedSecurity()
-        {
-            IntegratedSecurity = true;
-            UserName = null;
-            Password = null;
         }
     }
 }

@@ -108,20 +108,33 @@
     </ItemGroup>
 
     <!--
+        Script Mappings
+        ===============
+        Script mappings are used to associate sessions and script configurations with sql scripts.
+        The include expression is used to determine the scripts that should be mapped to the given session
+        and configuration.
+        The include expression is a regex that is applied to the identity of the script.
+    -->
+    <ItemGroup>
+        <SqlScriptMapping Include="myScript1">
+            <Config>Default</Config>
+            <Session>Default</Session>
+        </SqlScriptMapping>
+        <SqlScriptMapping>
+            <Session>Session1</Session>
+        </SqlScriptMapping>
+    </ItemGroup>
+
+    <!--
         Scripts
         =======
         You use SqlBuild to analyze and deploy sql scripts.
-        Per script you can define a session that should be used to deploy it.
+        To each script a session and configuration is applied that should be used to deploy it.
+        These are determined by looking at the script mappings.
     -->
     <ItemGroup>
-        <SqlScripts Include="myScripts">
-            <Config>Default</Config>
-            <Session>Default</Session>
-        </SqlScripts>
-
-        <SqlScripts Include="moreScripts">
-            <Session>Session1</Session>
-        </SqlScripts>
+        <SqlScript Include="myScript1" />
+        <SqlScript Include="anotherScript" />
     </ItemGroup>
 
 

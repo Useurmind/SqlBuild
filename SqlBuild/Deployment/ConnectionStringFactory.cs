@@ -21,7 +21,7 @@ namespace SqlBuild.Deployment
                 connStringBuilder.Append(";").AppendFormat("Initial Catalog={0}", connection.Database);
             }
 
-            if (login.IntegratedSecurity)
+            if (!string.IsNullOrEmpty(login.IntegratedSecurity))
             {
                 connStringBuilder.Append(";").AppendFormat("Integrated Security=true");
             }
