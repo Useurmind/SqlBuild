@@ -34,7 +34,10 @@ namespace SqlBuild.MsBuild.Test
         public void a_single_named_global_configuration_is_mapped_correctly()
         {
             string globalConfigurationName = "alsfjsdlkfjslk";
-            input.GlobalConfigurations = new[] { new TaskItem(globalConfigurationName) };
+            var globalConfigItem = new TaskItem(globalConfigurationName);
+
+            input.GlobalConfigurations = new[] { globalConfigItem };
+
 
             mapper.MapTo(input, output);
 
@@ -177,7 +180,7 @@ namespace SqlBuild.MsBuild.Test
             string scriptMappingKey = "asflfdjgsdl";
             string scriptMappingPattern = "Adsdfgsdfg";
             string sessionKey = "sdflkslödfsgd";
-            string configurationKey= "dfshdgjhfdghjfhg";
+            string configurationKey = "dfshdgjhfdghjfhg";
 
             var mappingItem = new TaskItem(scriptMappingKey);
             mappingItem.SetMetadata(ModelExtensions.GetMetadataName<SqlScriptMapping, string>(x => x.ScriptPattern), scriptMappingPattern);
@@ -187,7 +190,7 @@ namespace SqlBuild.MsBuild.Test
             input.ScriptMappings = new[] { mappingItem };
 
             mapper.MapTo(input, output);
-            
+
             var mapping = output.ScriptMappings[scriptMappingKey];
 
             Assert.Equal(scriptMappingPattern, mapping.ScriptPattern);

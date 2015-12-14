@@ -12,3 +12,8 @@
 /SqlBuild.MsBuild.Test/bin
 /SqlBuild.Test/obj
 /SqlBuild.Test/bin
+/SqlBuild.ExampleProject/bin/Debug
+/SqlBuild.ExampleProject/Debug
+/SqlBuild.ExampleProject/obj/Debug
+/SqlBuild.sln.DotSettings.user
+/SqlBuild.v12.suo

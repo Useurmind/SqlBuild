@@ -1,14 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Debug\SqlBuild.Setup.targets" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <ItemGroup>
+    <SqlGlobalConfiguration Include="Default">
+    </SqlGlobalConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <SqlConnection Include="Default">
+      <Server>MyServer</Server>
+      <Database>Database</Database>
+      <ServerVersion>SqlServer2008</ServerVersion>
+    </SqlConnection>
+  </ItemGroup>
+  <ItemGroup>
+    <SqlLogin Include="Default">
+      <UserName>user</UserName>
+      <Password>password</Password>
+    </SqlLogin>
+  </ItemGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{45593EF6-3EC2-469E-A4EE-B7B35B09F0FC}</ProjectGuid>
+    <ProjectGuid>{EFEF35E0-EC8D-40EB-96A5-DEC7F6EDE7A7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SqlBuild.MsBuild</RootNamespace>
-    <AssemblyName>SqlBuild.MsBuild</AssemblyName>
+    <RootNamespace>SqlBuild.ExampleProject</RootNamespace>
+    <AssemblyName>SqlBuild.ExampleProject</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,16 +48,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Build" />
-    <Reference Include="Microsoft.Build.Conversion.v4.0" />
-    <Reference Include="Microsoft.Build.Engine" />
-    <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Microsoft.Build.Tasks.v4.0" />
-    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,32 +57,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SqlBuilderTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlBuildMode.cs" />
-    <Compile Include="TaskItemMapper.cs" />
-    <Compile Include="TaskItemMapperInput.cs" />
-    <Compile Include="TaskLog.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SqlBuild\SqlBuild.csproj">
-      <Project>{d3b8336c-79de-426b-ae39-ea6304b5d940}</Project>
-      <Name>SqlBuild</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="SqlBuild.Setup.targets">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="SqlBuild.example.targets" />
-    <None Include="SqlBuild.targets">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <SqlBuildScript Include="Sql\1.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="Debug\SqlBuild.targets" />
+  
+  <Target Name="AfterBuild" DependsOnTargets="SqlBuildCompile">
+        <!-- Insert tasks to run after build here -->
+    </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

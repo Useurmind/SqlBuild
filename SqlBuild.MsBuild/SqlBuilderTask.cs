@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using Autofac;
 
@@ -22,6 +23,33 @@ namespace SqlBuild.MsBuild
         /// </summary>
         private IContainer sqlBuildContainer;
 
+        private SqlBuildMode BuildModeTyped
+        {
+            get
+            {
+                SqlBuildMode mode;
+                if (!Enum.TryParse(BuildMode, out mode))
+                {
+                    var validValues = string.Join(", ", Enum.GetNames(typeof(SqlBuildMode)));
+                    var errorMessage =
+                        string.Format(
+                            "Build mode '{0}' not valid for SqlBuild. It must have one of the values: {1}",
+                            BuildMode,
+                            validValues);
+
+                    throw new SqlBuildException(errorMessage);
+                }
+
+                return mode;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the build mode.
+        /// </summary>
+        [Required]
+        public string BuildMode { get; set; }
+
         /// <summary>
         /// Gets or sets the active global configuration key.
         /// </summary>
@@ -40,11 +68,13 @@ namespace SqlBuild.MsBuild
         /// <summary>
         /// Gets or sets the connections.
         /// </summary>
+        [Required]
         public ITaskItem[] Connections { get; set; }
 
         /// <summary>
         /// Gets or sets the logins.
         /// </summary>
+        [Required]
         public ITaskItem[] Logins { get; set; }
 
         /// <summary>
@@ -60,6 +90,7 @@ namespace SqlBuild.MsBuild
         /// <summary>
         /// Gets or sets the scripts.
         /// </summary>
+        [Required]
         public ITaskItem[] Scripts { get; set; }
 
         /// <summary>
@@ -90,6 +121,8 @@ namespace SqlBuild.MsBuild
                     sqlBuildContainer = containerFactory.CreateContainer();
                 }
 
+                this.EnsureTaskItemArrays();
+
                 var mapperInput = new TaskItemMapperInput()
                                       {
                                           Connections = Connections,
@@ -110,7 +143,16 @@ namespace SqlBuild.MsBuild
 
                 var sqlBuilder = sqlBuildContainer.Resolve<ISqlBuilder>();
 
-                sqlBuilder.Execute();
+                switch (BuildModeTyped)
+                {
+                    case SqlBuildMode.Compile:
+                        sqlBuilder.Compile();
+                        break;
+                    case SqlBuildMode.CompileAndDeploy:
+                        sqlBuilder.CompileAndDeploy();
+                        break;
+                }
+
             }
             catch (SqlBuildException sqlBuildEx)
             {
@@ -123,6 +165,38 @@ namespace SqlBuild.MsBuild
             }
 
             return true;
+        }
+
+        private void EnsureTaskItemArrays()
+        {
+            if (this.Connections == null)
+            {
+                this.Connections = new ITaskItem[0];
+            }
+            if (this.GlobalConfigurations == null)
+            {
+                this.GlobalConfigurations = new ITaskItem[0];
+            }
+            if (this.Logins == null)
+            {
+                this.Logins = new ITaskItem[0];
+            }
+            if (this.ScriptConfigurations == null)
+            {
+                this.ScriptConfigurations = new ITaskItem[0];
+            }
+            if (this.ScriptMappings == null)
+            {
+                this.ScriptMappings = new ITaskItem[0];
+            }
+            if (this.Scripts == null)
+            {
+                this.Scripts = new ITaskItem[0];
+            }
+            if (this.Sessions == null)
+            {
+                this.Sessions = new ITaskItem[0];
+            }
         }
     }
 }

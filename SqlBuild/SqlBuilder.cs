@@ -14,14 +14,21 @@ namespace SqlBuild
     {
         SqlBuildSetup Setup { get; }
 
-        bool Execute();
+        void Compile();
+
+        void CompileAndDeploy();
     }
 
     public class SqlBuilder : ISqlBuilder
     {
         public SqlBuildSetup Setup { get; set; }
 
-        public bool Execute()
+        public void Compile()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CompileAndDeploy()
         {
             throw new NotImplementedException();
         }

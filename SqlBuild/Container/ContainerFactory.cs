@@ -27,7 +27,7 @@ namespace SqlBuild.Container
 
             this.builder.RegisterInstance(sqlBuildLog).As<ISqlBuildLog>();
 
-            this.builder.Register(c => new SqlBuilder() { Setup = c.Resolve<SqlBuildSetup>() });
+            this.builder.Register(c => new SqlBuilder() { Setup = c.Resolve<SqlBuildSetup>() }).As<ISqlBuilder>();
 
             this.builder.Register(c => new SqlBuildSetup() { SqlBuildLog = c.Resolve<ISqlBuildLog>() });
 

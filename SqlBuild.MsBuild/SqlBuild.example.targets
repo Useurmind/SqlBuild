@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="4.0" DefaultTargets="" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <!-- Here is the structure of the properties and item groups that is necessary -->
 
     <!--
@@ -7,7 +7,7 @@
         The global configuration includes settings that have only a global meaning.
         At each run you can only choose one of these configurations.
     -->
-    <!--<PropertyGroup>
+    <PropertyGroup>
         <SqlActiveGlobalConfiguration>Default</SqlActiveGlobalConfiguration>
     </PropertyGroup>
     <ItemGroup>
@@ -15,7 +15,7 @@
             <SomeSetting>someValue</SomeSetting>
             <SomeOtherSetting>someOtherValue</SomeOtherSetting>
         </SqlGlobalConfiguration>
-    </ItemGroup>-->
+    </ItemGroup>
 
     <!--
         Script Configurations
@@ -25,7 +25,7 @@
         The configuration marked with name "Default" is automatically applied to all scripts that have no other
         configuration applied.
     -->
-    <!--<ItemGroup>
+    <ItemGroup>
         <SqlScriptConfiguration Include="Default">
             <SomeSetting>SomeValue</SomeSetting>
             <SomeSetting2>SomeValue2</SomeSetting2>
@@ -34,7 +34,7 @@
             <SomeSetting>SomeValue3</SomeSetting>
             <SomeSetting2>SomeValue4</SomeSetting2>
         </SqlScriptConfiguration>
-    </ItemGroup>-->
+    </ItemGroup>
 
     <!--
         Connections
@@ -42,7 +42,7 @@
         Connections define to which servers/databases/schemas you can connect and
         deploy your scripts.
     -->
-    <!--<ItemGroup>
+    <ItemGroup>
         <SqlConnection Include="Default">
             <Server>defaultServer</Server>
             <Database>defaultDatabase</Database>
@@ -54,7 +54,7 @@
             <Database>myDatabase</Database>
             <Schema>mySchema</Schema>
         </SqlConnection>
-    </ItemGroup>-->
+    </ItemGroup>
 
     <!--
         Logins
@@ -64,7 +64,7 @@
         - login with encrypted password (password retrieved from the password store)
         - login with plain text password
     -->
-    <!--<ItemGroup>
+    <ItemGroup>
         <SqlLogin Include="Default">
             <UserName>globalDefaultUser</UserName>
             <Password>passwordForDefaultUser</Password>
@@ -82,7 +82,7 @@
         </SqlLogin>
 
         <SqlPasswordStore Include="Passwords.store"></SqlPasswordStore>
-    </ItemGroup>-->
+    </ItemGroup>
 
     <!--
         Sessions
@@ -92,7 +92,7 @@
         The session marked with name "Default" is applied to all scripts when no other session
         is applied to them.
     -->
-    <!--<ItemGroup>
+    <ItemGroup>
         <SqlSession Include="Default">
             <Connection>Default</Connection>
             <Login>Default</Login>
@@ -102,7 +102,7 @@
             <Connection>Connection1</Connection>
             <Login>Login2</Login>
         </SqlSession>
-    </ItemGroup>-->
+    </ItemGroup>
 
     <!--
         Script Mappings
@@ -114,7 +114,7 @@
         Mappings are evaluated in order they appear. Once a script was mapped it will not be available to mappings
         that follow later on. The default mapping is applied last.
     -->
-    <!--<ItemGroup>
+    <ItemGroup>
         <SqlScriptMapping Include="Default">
             <ScriptPattern>myScript1</ScriptPattern>
             <Config>Default</Config>
@@ -124,43 +124,17 @@
             <ScriptPattern>anotherScript</ScriptPattern>
             <Session>Session1</Session>
         </SqlScriptMapping>
-    </ItemGroup>-->
+    </ItemGroup>
 
     <!--
         Scripts
         =======
         You use SqlBuild to analyze and deploy sql scripts.
-        To each script a mapping is applied whose regex matches the script identity.
-        You include scripts by setting the custom action in visual studio to SqlBuildScript.
-    --><!--
+        To each script a session and configuration is applied that should be used to deploy it.
+        These are determined by looking at the script mappings.
+    -->
     <ItemGroup>
-        <SqlBuildScript Include="myScript1" />
-        <SqlBuildScript Include="anotherScript" />
-    </ItemGroup>-->
-
-    <UsingTask TaskName="SqlBuild.MsBuild.SqlBuilderTask" AssemblyFile="$(SqlBuildAssemblyPath)"></UsingTask>
-
-    <Target Name="SqlBuildCompile">
-        <SqlBuild.MsBuild.SqlBuilderTask BuildMode="Compile"
-                                         ActiveGlobalConfiguration="$(SqlActiveGlobalConfiguration)"
-                                         GlobalConfigurations="@(SqlGlobalConfiguration)"
-                                         ScriptConfigurations="@(SqlScriptConfiguration)"
-                                         Connections="@(SqlConnection)"
-                                         Logins="@(SqlLogin)"
-                                         Sessions="@(SqlSession)"
-                                         ScriptMappings="@(SqlScriptMapping)"
-                                         Scripts="@(SqlBuildScript)"></SqlBuild.MsBuild.SqlBuilderTask>
-    </Target>
-
-    <Target Name="SqlBuildCompileAndDeploy">
-        <SqlBuild.MsBuild.SqlBuilderTask BuildMode="CompileAndDeploy"
-                                         ActiveGlobalConfiguration="$(SqlActiveGlobalConfiguration)"
-                                         GlobalConfigurations="@(SqlGlobalConfiguration)"
-                                         ScriptConfigurations="@(SqlScriptConfiguration)"
-                                         Connections="@(SqlConnection)"
-                                         Logins="@(SqlLogin)"
-                                         Sessions="@(SqlSession)"
-                                         ScriptMappings="@(SqlScriptMapping)"
-                                         Scripts="@(SqlBuildScript)"></SqlBuild.MsBuild.SqlBuilderTask>
-    </Target>
+        <SqlScript Include="myScript1" />
+        <SqlScript Include="anotherScript" />
+    </ItemGroup>
 </Project>

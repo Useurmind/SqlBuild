@@ -1,0 +1,13 @@
+﻿<Project ToolsVersion="4.0" DefaultTargets="" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- Contains stuff that should be included at the beginning of the project file -->
+
+    <PropertyGroup>
+        <!-- you can change this path if need arises -->
+        <SqlBuildAssemblyPath>SqlBuild.MsBuild.dll</SqlBuildAssemblyPath>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <!-- add custom action to visual studio menu -->
+        <AvailableItemName Include="SqlBuildScript" />
+    </ItemGroup>
+</Project>

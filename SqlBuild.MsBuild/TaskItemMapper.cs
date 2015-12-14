@@ -53,8 +53,6 @@ namespace SqlBuild.MsBuild
             foreach (var globalConfigItem in input.GlobalConfigurations)
             {
                 var globalConfig = setup.GlobalConfigurations.GetOrCreate(globalConfigItem.ItemSpec);
-
-                // SetIfNotEmpty(globalConfigItem, globalConfig, "");
             }
 
             foreach (var scriptConfigItem in input.ScriptConfigurations)
