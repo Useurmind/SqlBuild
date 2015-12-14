@@ -52,6 +52,14 @@
   <ItemGroup>
     <Compile Include="Deployment\ConnectionStringFactory.cs" />
     <Compile Include="Deployment\ScriptExecutor.cs" />
+    <Compile Include="Errors.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Errors.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Logging\ErrorLog.cs" />
+    <Compile Include="Logging\ErrorLogExtensions.cs" />
+    <Compile Include="Logging\IErrorLog.cs" />
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\KeyedModel.cs" />
@@ -78,6 +86,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Syntax\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Errors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
