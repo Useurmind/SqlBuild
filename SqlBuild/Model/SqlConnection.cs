@@ -13,5 +13,7 @@ namespace SqlBuild.Model
         public string Database { get; set; }
 
         public string Schema { get; set; }
+
+        public ServerVersion ServerVersion { get; set; }
     }
 }

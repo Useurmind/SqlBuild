@@ -128,11 +128,13 @@ namespace SqlBuild.MsBuild.Test
             string server = "sdölkjsdfgdsfg";
             string database = "dfshdgjhfdghjfhg";
             string schema = "afdshdfjhfhjkghk";
+            string serverVersion = ServerVersion.SqlServer2014.ToString();
 
             var connectionItem = new TaskItem(connectionKey);
             connectionItem.SetMetadata(ModelExtensions.GetMetadataName<SqlConnection, string>(x => x.Server), server);
             connectionItem.SetMetadata(ModelExtensions.GetMetadataName<SqlConnection, string>(x => x.Database), database);
             connectionItem.SetMetadata(ModelExtensions.GetMetadataName<SqlConnection, string>(x => x.Schema), schema);
+            connectionItem.SetMetadata(ModelExtensions.GetMetadataName<SqlConnection, ServerVersion>(x => x.ServerVersion), serverVersion);
 
             input.Connections = new[] { connectionItem };
 
@@ -144,6 +146,7 @@ namespace SqlBuild.MsBuild.Test
             Assert.Equal(server, connection.Server);
             Assert.Equal(database, connection.Database);
             Assert.Equal(schema, connection.Schema);
+            Assert.Equal(ServerVersion.SqlServer2014, connection.ServerVersion);
         }
 
         [Fact]

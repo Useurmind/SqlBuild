@@ -22,7 +22,7 @@ namespace SqlBuild {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Errors {
+    public class Errors {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace SqlBuild {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SqlBuild.Errors", typeof(Errors).Assembly);
@@ -51,7 +51,7 @@ namespace SqlBuild {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,11 +61,38 @@ namespace SqlBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not parse value &apos;{0}&apos; to match datatype &apos;{2}&apos; of property &apos;{1}&apos; in object &apos;{3}&apos;..
+        /// </summary>
+        public static string CouldNotParsePropertyValue {
+            get {
+                return ResourceManager.GetString("CouldNotParsePropertyValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not able to connect referenced object {2} in {0} with key &apos;{1}&apos;. The {2} with key &apos;{3}&apos; could not be found. .
         /// </summary>
-        internal static string ReferencedElementNotFound {
+        public static string ReferencedElementNotFound {
             get {
                 return ResourceManager.GetString("ReferencedElementNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The SQL server version &apos;{0}&apos; is not supported..
+        /// </summary>
+        public static string SqlServerVersionNotSupported {
+            get {
+                return ResourceManager.GetString("SqlServerVersionNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must specify a SQL server version for connection &apos;{0}&apos;..
+        /// </summary>
+        public static string SqlServerVersionRequired {
+            get {
+                return ResourceManager.GetString("SqlServerVersionRequired", resourceCulture);
             }
         }
     }

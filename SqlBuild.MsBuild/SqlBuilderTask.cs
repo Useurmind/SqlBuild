@@ -1,143 +1,128 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
+﻿using System.Linq;
 
-//using Microsoft.Build.Framework;
-//using Microsoft.Build.Utilities;
+using Autofac;
 
-//using SqlBuild.Model;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 
-//namespace SqlBuild.MsBuild
-//{
-//    public class SqlBuilderTask : Task
-//    {
-//        private ISqlBuilder sqlBuilder;
+using SqlBuild.Container;
+using SqlBuild.Logging;
+using SqlBuild.Model;
+using SqlBuild.Utility;
 
-//        private SqlBuilderConfiguration configuration;
+namespace SqlBuild.MsBuild
+{
+    /// <summary>
+    /// The task that executes sql build.
+    /// </summary>
+    public class SqlBuilderTask : Task
+    {
+        /// <summary>
+        /// The sql build DI container.
+        /// </summary>
+        private IContainer sqlBuildContainer;
 
-//        public string ActiveGlobalConfiguration { get; set; }
+        /// <summary>
+        /// Gets or sets the active global configuration key.
+        /// </summary>
+        public string ActiveGlobalConfiguration { get; set; }
 
-//        public ITaskItem[] GlobalConfigurations { get; set; }
-//        public ITaskItem[] ScriptConfigurations { get; set; }
-//        public ITaskItem[] Connections { get; set; }
-//        public ITaskItem[] Logins { get; set; }
-//        public ITaskItem[] Sessions { get; set; }
-//        public ITaskItem[] Scripts { get; set; }
+        /// <summary>
+        /// Gets or sets the global configurations.
+        /// </summary>
+        public ITaskItem[] GlobalConfigurations { get; set; }
 
-//        public SqlBuilderTask()
-//        {
-//            sqlBuilder = new SqlBuilder();
-//            Scripts = new ITaskItem[0];
-//            configuration = new SqlBuilderConfiguration();
-//        }
+        /// <summary>
+        /// Gets or sets the script configurations.
+        /// </summary>
+        public ITaskItem[] ScriptConfigurations { get; set; }
 
-//        public void SetBuilder(ISqlBuilder builder)
-//        {
-//            sqlBuilder = builder;
-//        }
+        /// <summary>
+        /// Gets or sets the connections.
+        /// </summary>
+        public ITaskItem[] Connections { get; set; }
 
-//        public override bool Execute()
-//        {
-//            defaultLogin = new SqlLogin();
+        /// <summary>
+        /// Gets or sets the logins.
+        /// </summary>
+        public ITaskItem[] Logins { get; set; }
 
-//            if (DefaultIntegratedSecurity)
-//            {
-//                defaultLogin.SetIntegratedSecurity();
-//            }
-//            else
-//            {
-//                defaultLogin.SetUsernamePassword(DefaultUserName, DefaultPassword);
-//            }
+        /// <summary>
+        /// Gets or sets the sessions.
+        /// </summary>
+        public ITaskItem[] Sessions { get; set; }
 
-//            defaultConnection = new SqlConnection(DefaultServer)
-//                                    {
-//                                        Database = DefaultDatabase,
-//                                        Schema = DefaultSchema
-//                                    };
+        /// <summary>
+        /// Gets or sets the script mappings.
+        /// </summary>
+        public ITaskItem[] ScriptMappings { get; set; }
 
-//            AddScripts();
+        /// <summary>
+        /// Gets or sets the scripts.
+        /// </summary>
+        public ITaskItem[] Scripts { get; set; }
 
-//            sqlBuilder.SetConfiguration(configuration);
+        /// <summary>
+        /// Set the DI container to resolve dependencies (only for testing).
+        /// </summary>
+        /// <param name="container">
+        /// The DI container.
+        /// </param>
+        public void SetContainer(IContainer container)
+        {
+            sqlBuildContainer = container;
+        }
 
-//            return sqlBuilder.Execute();
-//        }
+        /// <summary>
+        /// Execute the task.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        public override bool Execute()
+        {
+            try
+            {
+                if (sqlBuildContainer == null)
+                {
+                    this.Log.LogCommandLine(MessageImportance.Low, "Creating DI container...");
+                    var containerFactory = new ContainerFactory(new TaskLog(this.Log));
+                    sqlBuildContainer = containerFactory.CreateContainer();
+                }
 
-//        private void AddScripts()
-//        {
-//            foreach (var scriptItem in Scripts)
-//            {
-//                var script = this.GetScript(scriptItem);
+                var mapperInput = new TaskItemMapperInput()
+                                      {
+                                          Connections = Connections,
+                                          GlobalConfigurations = GlobalConfigurations,
+                                          Logins = Logins,
+                                          ScriptConfigurations = ScriptConfigurations,
+                                          ScriptMappings = ScriptMappings,
+                                          Scripts = Scripts,
+                                          Sessions = Sessions
+                                      };
 
-//                sqlBuilder.AddScript(script);
-//            }
-//        }
+                var sqlSetup = sqlBuildContainer.Resolve<SqlBuildSetup>();
 
-//        private SqlScript GetScript(ITaskItem taskItem)
-//        {
-//            var login = GetLogin(taskItem);
+                var mapper = new TaskItemMapper() { Log = sqlBuildContainer.Resolve<ISqlBuildLog>() };
 
-//            var connection = GetConnection(taskItem);
+                this.Log.LogCommandLine(MessageImportance.Low, "Creating DI container...");
+                mapper.MapTo(mapperInput, sqlSetup);
 
-//            var script = new SqlScript(taskItem.GetMetadata("Identity"))
-//                             {
-//                                 Connection = connection,
-//                                 Login = login
-//                             };
+                var sqlBuilder = sqlBuildContainer.Resolve<ISqlBuilder>();
 
-//            return script;
-//        }
+                sqlBuilder.Execute();
+            }
+            catch (SqlBuildException sqlBuildEx)
+            {
+                this.Log.LogError(sqlBuildEx.Message);
+                return false;
+            }
+            finally
+            {
+                sqlBuildContainer.Dispose();
+            }
 
-//        private SqlConnection GetConnection(ITaskItem taskItem)
-//        {
-//            SqlConnection connection = defaultConnection;
-
-//            var server = taskItem.GetMetadata(SqlScriptTaskItemMetaData.Server);
-//            var database = taskItem.GetMetadata(SqlScriptTaskItemMetaData.Database);
-//            var schema = taskItem.GetMetadata(SqlScriptTaskItemMetaData.Schema);
-
-//            if (!string.IsNullOrEmpty(server))
-//            {
-//                connection.Server = server;
-//            }
-
-//            if (!string.IsNullOrEmpty(database))
-//            {
-//                connection.Database = database;
-//            }
-
-//            if (!string.IsNullOrEmpty(schema))
-//            {
-//                connection.Schema = schema;
-//            }
-
-//            return connection;
-//        }
-
-//        private SqlLogin GetLogin(ITaskItem taskItem)
-//        {
-//            SqlLogin login = defaultLogin;
-
-//            var userName = taskItem.GetMetadata(SqlScriptTaskItemMetaData.UserName);
-//            var integratedSecurityString = taskItem.GetMetadata(SqlScriptTaskItemMetaData.IntegratedSecurity);
-//            if (!string.IsNullOrEmpty(integratedSecurityString) ||
-//                !string.IsNullOrEmpty(userName))
-//            {
-//                login = new SqlLogin();
-
-//                if (string.IsNullOrEmpty(integratedSecurityString) || !bool.Parse(integratedSecurityString))
-//                {
-//                    login.SetUsernamePassword(
-//                        taskItem.GetMetadata(SqlScriptTaskItemMetaData.UserName),
-//                        taskItem.GetMetadata(SqlScriptTaskItemMetaData.Password));
-//                }
-//                else
-//                {
-//                    login.SetIntegratedSecurity();
-//                }
-//            }
-
-//            return login;
-//        }
-//    }
-//}
+            return true;
+        }
+    }
+}

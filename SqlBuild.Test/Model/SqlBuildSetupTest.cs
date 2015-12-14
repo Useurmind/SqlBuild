@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using SqlBuild.Model;
+using SqlBuild.Utility;
 
 using Xunit;
 
@@ -18,7 +19,7 @@ namespace SqlBuild.Test.Model
         {   
             setup = new SqlBuildSetup()
                         {
-                            ErrorLog = new ExceptionErrorLog()
+                            SqlBuildLog = new ExceptionSqlBuildLog()
                         };
         }
 
@@ -126,7 +127,7 @@ namespace SqlBuild.Test.Model
             setup.Connections.Add(connection.Key, connection);
             setup.Sessions.Add(sessionMissingLogin.Key, sessionMissingLogin);
 
-            var exception = Assert.Throws<Exception>(() => setup.ConnectReferences());
+            var exception = Assert.Throws<SqlBuildException>(() => setup.ConnectReferences());
 
             Assert.True(exception.Message.Contains(typeof(SqlSession).Name));
             Assert.True(exception.Message.Contains(typeof(SqlLogin).Name));
@@ -148,7 +149,7 @@ namespace SqlBuild.Test.Model
             setup.Logins.Add(login.Key, login);
             setup.Sessions.Add(sessionMissingLogin.Key, sessionMissingLogin);
 
-            var exception = Assert.Throws<Exception>(() => setup.ConnectReferences());
+            var exception = Assert.Throws<SqlBuildException>(() => setup.ConnectReferences());
 
             Assert.True(exception.Message.Contains(typeof(SqlSession).Name));
             Assert.True(exception.Message.Contains(typeof(SqlConnection).Name));
@@ -179,7 +180,7 @@ namespace SqlBuild.Test.Model
             setup.Sessions.Add(session.Key, session);
             setup.ScriptMappings.Add(mapping.Key, mapping);
 
-            var exception = Assert.Throws<Exception>(() => setup.ConnectReferences());
+            var exception = Assert.Throws<SqlBuildException>(() => setup.ConnectReferences());
 
             Assert.True(exception.Message.Contains(typeof(SqlScriptMapping).Name));
             Assert.True(exception.Message.Contains(typeof(SqlScriptConfiguration).Name));
@@ -204,7 +205,7 @@ namespace SqlBuild.Test.Model
             setup.ScriptConfigurations.Add(configuration.Key, configuration);
             setup.ScriptMappings.Add(mapping.Key, mapping);
 
-            var exception = Assert.Throws<Exception>(() => setup.ConnectReferences());
+            var exception = Assert.Throws<SqlBuildException>(() => setup.ConnectReferences());
 
             Assert.True(exception.Message.Contains(typeof(SqlScriptMapping).Name));
             Assert.True(exception.Message.Contains(typeof(SqlSession).Name));

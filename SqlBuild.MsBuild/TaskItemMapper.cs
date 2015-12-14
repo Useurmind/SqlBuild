@@ -1,19 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 using Microsoft.Build.Framework;
 
+using SqlBuild.Logging;
 using SqlBuild.Model;
 using SqlBuild.Utility;
 
 namespace SqlBuild.MsBuild
 {
+    /// <summary>
+    /// This class maps task items to the internal object model.
+    /// No references are created during this stage, only object creation and property mapping is done.
+    /// If any errors happen during this stage the process is not yet aborted.
+    /// Reference mapping is executed before aborting the process.
+    /// </summary>
     public class TaskItemMapper
     {
+        /// <summary>
+        /// Gets or sets the log.
+        /// </summary>
+        public ISqlBuildLog Log { get; set; }
+
+        /// <summary>
+        /// Maps the task items in the input to objects in the setup for sql build.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="setup">The setup.</param>
         public void MapTo(TaskItemMapperInput input, SqlBuildSetup setup)
         {
             foreach (var loginItem in input.Logins)
@@ -32,12 +46,15 @@ namespace SqlBuild.MsBuild
                 SetIfNotEmpty(connectionItem, connection, connection.GetProperty(x => x.Server));
                 SetIfNotEmpty(connectionItem, connection, connection.GetProperty(x => x.Database));
                 SetIfNotEmpty(connectionItem, connection, connection.GetProperty(x => x.Schema));
+
+                SetEnumIfNotEmpty<SqlConnection, ServerVersion>(connectionItem, connection, connection.GetProperty(x => x.ServerVersion));
             }
 
             foreach (var globalConfigItem in input.GlobalConfigurations)
             {
                 var globalConfig = setup.GlobalConfigurations.GetOrCreate(globalConfigItem.ItemSpec);
-                //SetIfNotEmpty(globalConfigItem, globalConfig, "");
+
+                // SetIfNotEmpty(globalConfigItem, globalConfig, "");
             }
 
             foreach (var scriptConfigItem in input.ScriptConfigurations)
@@ -72,14 +89,12 @@ namespace SqlBuild.MsBuild
             }
         }
 
-        private static void SetIfNotEmpty<T>(ITaskItem item, T model, PropertyInfo propertyInfo)
-            where T : IModel
+        private static void SetIfNotEmpty<T>(ITaskItem item, T model, PropertyInfo propertyInfo) where T : IModel
         {
             SetIfNotEmpty(item, model, model.GetMetadataName(propertyInfo.Name), propertyInfo);
         }
 
-        private static void SetKeyIfNotEmpty<T>(ITaskItem item, T model, PropertyInfo propertyInfo)
-            where T : IModel
+        private static void SetKeyIfNotEmpty<T>(ITaskItem item, T model, PropertyInfo propertyInfo) where T : IModel
         {
             SetIfNotEmpty(item, model, propertyInfo);
         }
@@ -90,6 +105,21 @@ namespace SqlBuild.MsBuild
             if (!string.IsNullOrEmpty(metaData))
             {
                 propertyInfo.SetValue(model, metaData, null);
+            }
+        }
+
+        private void SetEnumIfNotEmpty<TModel, TEnum>(ITaskItem item, TModel model, PropertyInfo propertyInfo)
+            where TModel : IModel where TEnum : struct
+        {
+            string metaData = item.GetMetadata(model.GetMetadataName(propertyInfo.Name));
+            TEnum value;
+            if (!Enum.TryParse(metaData, out value))
+            {
+                Log.WriteCouldNotParsePropertyValue<TModel>(metaData, propertyInfo);
+            }
+            else
+            {
+                propertyInfo.SetValue(model, value, null);
             }
         }
     }

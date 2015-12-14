@@ -12,48 +12,18 @@ namespace SqlBuild
 {
     public interface ISqlBuilder
     {
-        void SetConfiguration(SqlBuilderConfiguration configuration);
-
-        void AddScript(SqlScript script);
+        SqlBuildSetup Setup { get; }
 
         bool Execute();
     }
 
     public class SqlBuilder : ISqlBuilder
     {
-        private IList<SqlScript> scripts;
-
-        private SqlBuilderConfiguration configuration;
-
-        public SqlBuilder()
-        {
-            scripts = new List<SqlScript>();
-        }
-
-        public void SetConfiguration(SqlBuilderConfiguration configuration)
-        {
-            configuration = new SqlBuilderConfiguration();
-        }
-
-        public void AddScript(SqlScript script)
-        {
-            scripts.Add(script);
-        }
+        public SqlBuildSetup Setup { get; set; }
 
         public bool Execute()
         {
-            foreach (var script in scripts)
-            {
-                new ScriptExistsCheck(script);
-            }
-
-            var executor = new ScriptExecutor();
-            foreach (var script in scripts)
-            {
-                executor.Execute(script);
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
     }
 }

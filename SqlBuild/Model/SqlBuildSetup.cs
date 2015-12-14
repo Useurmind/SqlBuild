@@ -70,7 +70,7 @@ namespace SqlBuild.Model
         public IDictionary<string, SqlScriptMapping> ScriptMappings { get; private set; }
         public IList<SqlScript> Scripts { get; private set; }
 
-        public IErrorLog ErrorLog { get; set; }
+        public ISqlBuildLog SqlBuildLog { get; set; }
 
         public SqlBuildSetup()
         {
@@ -116,7 +116,7 @@ namespace SqlBuild.Model
             SqlGlobalConfiguration configuration;
             if (!GlobalConfigurations.TryGetValue(ActiveGlobalConfigurationKey, out configuration))
             {
-                ErrorLog.WriteReferencedElementNotFound<SqlBuildSetup, SqlGlobalConfiguration>(
+                this.SqlBuildLog.WriteReferencedElementNotFound<SqlBuildSetup, SqlGlobalConfiguration>(
                     "<none>",
                     ActiveGlobalConfigurationKey);
             }
@@ -133,7 +133,7 @@ namespace SqlBuild.Model
                 SqlLogin login = null;
                 if (!Logins.TryGetValue(session.LoginKey, out login))
                 {
-                    ErrorLog.WriteReferencedElementNotFound<SqlSession, SqlLogin>(session.Key, session.LoginKey);
+                    this.SqlBuildLog.WriteReferencedElementNotFound<SqlSession, SqlLogin>(session.Key, session.LoginKey);
                 }
                 else
                 {
@@ -143,7 +143,7 @@ namespace SqlBuild.Model
                 SqlConnection connection = null;
                 if (!Connections.TryGetValue(session.ConnectionKey, out connection))
                 {
-                    ErrorLog.WriteReferencedElementNotFound<SqlSession, SqlConnection>(
+                    this.SqlBuildLog.WriteReferencedElementNotFound<SqlSession, SqlConnection>(
                         session.Key,
                         session.ConnectionKey);
                 }
@@ -161,7 +161,7 @@ namespace SqlBuild.Model
                 SqlScriptConfiguration configuration;
                 if (!ScriptConfigurations.TryGetValue(scriptMapping.ConfigurationKey, out configuration))
                 {
-                    ErrorLog.WriteReferencedElementNotFound<SqlScriptMapping, SqlScriptConfiguration>(
+                    this.SqlBuildLog.WriteReferencedElementNotFound<SqlScriptMapping, SqlScriptConfiguration>(
                         scriptMapping.Key,
                         scriptMapping.ConfigurationKey);
                 }
@@ -173,7 +173,7 @@ namespace SqlBuild.Model
                 SqlSession session;
                 if (!Sessions.TryGetValue(scriptMapping.SessionKey, out session))
                 {
-                    ErrorLog.WriteReferencedElementNotFound<SqlScriptMapping, SqlSession>(
+                    this.SqlBuildLog.WriteReferencedElementNotFound<SqlScriptMapping, SqlSession>(
                         scriptMapping.Key,
                         scriptMapping.SessionKey);
                 }

@@ -117,7 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CouldNotParsePropertyValue" xml:space="preserve">
+    <value>Could not parse value '{0}' to match datatype '{2}' of property '{1}' in object '{3}'.</value>
+  </data>
   <data name="ReferencedElementNotFound" xml:space="preserve">
     <value>Not able to connect referenced object {2} in {0} with key '{1}'. The {2} with key '{3}' could not be found. </value>
+  </data>
+  <data name="SqlServerVersionNotSupported" xml:space="preserve">
+    <value>The SQL server version '{0}' is not supported.</value>
+  </data>
+  <data name="SqlServerVersionRequired" xml:space="preserve">
+    <value>You must specify a SQL server version for connection '{0}'.</value>
   </data>
 </root>

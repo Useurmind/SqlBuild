@@ -17,5 +17,7 @@ namespace SqlBuild.Model
         {
             return File.ReadAllText(this.Identity);
         }
+
+        public IEnumerable<SqlBatch> Batches { get; set; } 
     }
 }

@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.SqlServer.ConnectionInfoExtended, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.SqlServer.Diagnostics.STrace, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
@@ -50,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Container\ContainerFactory.cs" />
     <Compile Include="Deployment\ConnectionStringFactory.cs" />
     <Compile Include="Deployment\ScriptExecutor.cs" />
     <Compile Include="Errors.Designer.cs">
@@ -57,13 +62,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
-    <Compile Include="Logging\ErrorLog.cs" />
     <Compile Include="Logging\ErrorLogExtensions.cs" />
-    <Compile Include="Logging\IErrorLog.cs" />
+    <Compile Include="Logging\ISqlBuildLog.cs" />
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\KeyedModel.cs" />
     <Compile Include="Model\ModelExtensions.cs" />
+    <Compile Include="Model\ServerVersion.cs" />
+    <Compile Include="Model\SqlBatch.cs" />
     <Compile Include="Model\SqlBuildSetup.cs" />
     <Compile Include="Model\SqlConnection.cs" />
     <Compile Include="Model\SqlGlobalConfiguration.cs" />
@@ -74,22 +80,22 @@
     <Compile Include="Model\SqlSession.cs" />
     <Compile Include="SqlBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlBuilderConfiguration.cs" />
+    <Compile Include="Syntax\BatchSeparator.cs" />
+    <Compile Include="Syntax\ParserFactory.cs" />
     <Compile Include="Utility\CommonFunctions.cs" />
     <Compile Include="Utility\DictionaryExtensions.cs" />
     <Compile Include="Utility\Property.cs" />
+    <Compile Include="Utility\SqlBuildException.cs" />
     <Compile Include="Utility\ValidatedNotNullAttribute.cs" />
     <Compile Include="Validation\ScriptExistsCheck.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Syntax\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Errors.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
