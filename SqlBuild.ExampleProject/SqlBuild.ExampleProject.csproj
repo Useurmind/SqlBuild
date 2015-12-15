@@ -8,15 +8,15 @@
   </ItemGroup>
   <ItemGroup>
     <SqlConnection Include="Default">
-      <Server>MyServer</Server>
-      <Database>Database</Database>
+      <Server>192.168.126.50</Server>
+      <Database>SqlBuildTest</Database>
       <ServerVersion>SqlServer2008</ServerVersion>
     </SqlConnection>
   </ItemGroup>
   <ItemGroup>
     <SqlLogin Include="Default">
-      <UserName>user</UserName>
-      <Password>password</Password>
+      <UserName>JochenGruen</UserName>
+      <Password>admin</Password>
     </SqlLogin>
   </ItemGroup>
   <PropertyGroup>

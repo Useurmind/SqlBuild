@@ -23,5 +23,16 @@ namespace SqlBuild.Test
         }
 
         public bool WroteAnyErrors { get; private set; }
+
+
+        public string WriteError(string filePath, int lineNumber, int columnNumber, string errorCode, string errorMessage)
+        {
+            WroteAnyErrors = true;
+            throw new SqlBuildException(string.Join(", ", filePath, lineNumber, columnNumber, errorCode, errorMessage));
+        }
+        
+        public void WriteTrace(string message)
+        {
+        }
     }
 }

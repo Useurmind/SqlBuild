@@ -30,6 +30,7 @@ namespace SqlBuild.MsBuild
         /// <param name="setup">The setup.</param>
         public void MapTo(TaskItemMapperInput input, SqlBuildSetup setup)
         {
+            Log.WriteTraceFormat("Mapping {0} SqlLogin items", input.Logins.Count());
             foreach (var loginItem in input.Logins)
             {
                 var login = setup.Logins.GetOrCreate(loginItem.ItemSpec);
@@ -39,6 +40,7 @@ namespace SqlBuild.MsBuild
                 SetIfNotEmpty(loginItem, login, login.GetProperty(x => x.IntegratedSecurity));
             }
 
+            Log.WriteTraceFormat("Mapping {0} SqlConnection items", input.Connections.Count());
             foreach (var connectionItem in input.Connections)
             {
                 var connection = setup.Connections.GetOrCreate(connectionItem.ItemSpec);
@@ -50,16 +52,19 @@ namespace SqlBuild.MsBuild
                 SetEnumIfNotEmpty<SqlConnection, ServerVersion>(connectionItem, connection, connection.GetProperty(x => x.ServerVersion));
             }
 
+            Log.WriteTraceFormat("Mapping {0} SqlGlobalConfiguration items", input.GlobalConfigurations.Count());
             foreach (var globalConfigItem in input.GlobalConfigurations)
             {
                 var globalConfig = setup.GlobalConfigurations.GetOrCreate(globalConfigItem.ItemSpec);
             }
 
+            Log.WriteTraceFormat("Mapping {0} SqlScriptConfiguration items", input.ScriptConfigurations.Count());
             foreach (var scriptConfigItem in input.ScriptConfigurations)
             {
                 var scriptConfig = setup.ScriptConfigurations.GetOrCreate(scriptConfigItem.ItemSpec);
             }
 
+            Log.WriteTraceFormat("Mapping {0} SqlSession items", input.Sessions.Count());
             foreach (var sessionItem in input.Sessions)
             {
                 var session = setup.Sessions.GetOrCreate(sessionItem.ItemSpec);
@@ -68,6 +73,7 @@ namespace SqlBuild.MsBuild
                 SetKeyIfNotEmpty(sessionItem, session, session.GetProperty(x => x.ConnectionKey));
             }
 
+            Log.WriteTraceFormat("Mapping {0} SqlScriptMapping items", input.ScriptMappings.Count());
             foreach (var scriptMappingItem in input.ScriptMappings)
             {
                 var scriptMapping = setup.ScriptMappings.GetOrCreate(scriptMappingItem.ItemSpec);
@@ -77,6 +83,7 @@ namespace SqlBuild.MsBuild
                 SetKeyIfNotEmpty(scriptMappingItem, scriptMapping, scriptMapping.GetProperty(x => x.ConfigurationKey));
             }
 
+            Log.WriteTraceFormat("Mapping {0} SqlBuildScript items", input.Scripts.Count());
             foreach (var scriptItem in input.Scripts)
             {
                 var script = new SqlScript() { ItemSpec = scriptItem.ItemSpec };

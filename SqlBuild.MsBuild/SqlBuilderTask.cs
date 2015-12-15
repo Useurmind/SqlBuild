@@ -138,7 +138,7 @@ namespace SqlBuild.MsBuild
 
                 var mapper = new TaskItemMapper() { Log = sqlBuildContainer.Resolve<ISqlBuildLog>() };
 
-                this.Log.LogCommandLine(MessageImportance.Low, "Creating DI container...");
+                this.Log.LogCommandLine(MessageImportance.Low, "Mapping input task items to sql build setup...");
                 mapper.MapTo(mapperInput, sqlSetup);
 
                 var sqlBuilder = sqlBuildContainer.Resolve<ISqlBuilder>();
@@ -146,9 +146,11 @@ namespace SqlBuild.MsBuild
                 switch (BuildModeTyped)
                 {
                     case SqlBuildMode.Compile:
+                        this.Log.LogCommandLine(MessageImportance.Low, "Performing Compile on SqlBuildScripts");
                         sqlBuilder.Compile();
                         break;
                     case SqlBuildMode.CompileAndDeploy:
+                        this.Log.LogCommandLine(MessageImportance.Low, "Performing CompileAndDeploy on SqlBuildScripts");
                         sqlBuilder.CompileAndDeploy();
                         break;
                 }

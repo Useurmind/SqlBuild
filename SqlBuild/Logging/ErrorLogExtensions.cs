@@ -13,6 +13,11 @@ namespace SqlBuild.Logging
     /// </summary>
     public static class ErrorLogExtensions
     {
+        public static void WriteTraceFormat(this ISqlBuildLog sqlBuildLog, string message, params object[] parameters)
+        {
+            sqlBuildLog.WriteTrace(string.Format(message, parameters));
+        }
+
         /// <summary>
         /// Writes the error message and inserts the given format parameters into it using <see cref="string.Format(string,object)"/>.
         /// </summary>

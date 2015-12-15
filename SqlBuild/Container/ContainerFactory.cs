@@ -27,13 +27,22 @@ namespace SqlBuild.Container
 
             this.builder.RegisterInstance(sqlBuildLog).As<ISqlBuildLog>();
 
-            this.builder.Register(c => new SqlBuilder() { Setup = c.Resolve<SqlBuildSetup>() }).As<ISqlBuilder>();
+            this.builder.Register(c => new SqlBuilder()
+                                           {
+                                               Log = c.Resolve<ISqlBuildLog>(),
+                                               Setup = c.Resolve<SqlBuildSetup>(),
+                                               BatchExtractor = c.Resolve<IBatchExtractor>()
+                                           }).As<ISqlBuilder>();
 
-            this.builder.Register(c => new SqlBuildSetup() { SqlBuildLog = c.Resolve<ISqlBuildLog>() });
+            this.builder.Register(c => new SqlBuildSetup() { SqlBuildLog = c.Resolve<ISqlBuildLog>() }).SingleInstance();
 
             this.builder.Register(c => new ParserFactory() { SqlBuildLog = c.Resolve<ISqlBuildLog>() }).As<IParserFactory>();
 
-            this.builder.Register(c => new BatchExtractor() { ParserFactory = c.Resolve<ParserFactory>() });
+            this.builder.Register(c => new BatchExtractor()
+                                           {
+                                               ParserFactory = c.Resolve<IParserFactory>(),
+                                               Log = c.Resolve<ISqlBuildLog>()
+                                           }).As<IBatchExtractor>();
         }
 
         /// <summary>
