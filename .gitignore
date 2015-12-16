@@ -17,3 +17,6 @@
 /SqlBuild.ExampleProject/obj/Debug
 /SqlBuild.sln.DotSettings.user
 /SqlBuild.v12.suo
+/SqlBuild.Documentation/bin
+/SqlBuild.Documentation/obj/Debug
+/SqlBuild.Documentation/SqlBuild.Documentation.csproj.user

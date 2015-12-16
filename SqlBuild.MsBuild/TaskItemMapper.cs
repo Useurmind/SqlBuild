@@ -56,6 +56,9 @@ namespace SqlBuild.MsBuild
             foreach (var globalConfigItem in input.GlobalConfigurations)
             {
                 var globalConfig = setup.GlobalConfigurations.GetOrCreate(globalConfigItem.ItemSpec);
+
+                SetIfNotEmpty(globalConfigItem, globalConfig, globalConfig.GetProperty(x => x.ProjectName));
+                SetKeyIfNotEmpty(globalConfigItem, globalConfig, globalConfig.GetProperty(x => x.SqlBuildInfoSessionKey));
             }
 
             Log.WriteTraceFormat("Mapping {0} SqlScriptConfiguration items", input.ScriptConfigurations.Count());

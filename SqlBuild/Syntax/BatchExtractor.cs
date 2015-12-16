@@ -20,9 +20,15 @@ namespace SqlBuild.Syntax
 
     public class BatchExtractor : IBatchExtractor
     {
-        public ISqlBuildLog Log { get; set; }
+        private ISqlBuildLog Log { get; set; }
+        
+        private IParserFactory ParserFactory { get; set; }
 
-        public IParserFactory ParserFactory { get; set; }
+        public BatchExtractor(ISqlBuildLog log, IParserFactory parserFactory)
+        {
+            Log = log;
+            ParserFactory = parserFactory;
+        }
 
         public void ExtractBatches(SqlScript script, ServerVersion serverVersion)
         {
@@ -40,7 +46,15 @@ namespace SqlBuild.Syntax
 
             var tsqlScript = fragment as TSqlScript;
 
-            script.Batches = tsqlScript.Batches.Select(batch => new SqlBatch(batch));
+            script.Batches = tsqlScript.Batches.Select(batch => new SqlBatch()
+            {
+                SqlText = batch.ScriptTokenStream.Skip(batch.FirstTokenIndex)
+                                                            .Take(batch.LastTokenIndex - batch.FirstTokenIndex + 1)
+                                                            .Select(t => t.Text)
+                                                            .Aggregate(new StringBuilder(), (builder, s) => builder.Append(s), builder => builder.ToString()),
+                StartLine = batch.StartLine,
+                StartColumn = batch.StartColumn,
+            });
         }
     }
 }

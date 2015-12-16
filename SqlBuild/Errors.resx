@@ -123,6 +123,12 @@
   <data name="ReferencedElementNotFound" xml:space="preserve">
     <value>Not able to connect referenced object {2} in {0} with key '{1}'. The {2} with key '{3}' could not be found. </value>
   </data>
+  <data name="SqlScriptFileDoesNotExists" xml:space="preserve">
+    <value>The file '{0}' specified in the Identity of sql script '{1}' does not exist.</value>
+  </data>
+  <data name="SqlScriptMissingIdentity" xml:space="preserve">
+    <value>No Identity and no SQL text set for script '{0}'.</value>
+  </data>
   <data name="SqlServerVersionNotSupported" xml:space="preserve">
     <value>The SQL server version '{0}' is not supported.</value>
   </data>

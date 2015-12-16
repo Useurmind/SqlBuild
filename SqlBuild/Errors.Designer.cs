@@ -79,6 +79,24 @@ namespace SqlBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file &apos;{0}&apos; specified in the Identity of sql script &apos;{1}&apos; does not exist..
+        /// </summary>
+        public static string SqlScriptFileDoesNotExists {
+            get {
+                return ResourceManager.GetString("SqlScriptFileDoesNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Identity and no SQL text set for script &apos;{0}&apos;..
+        /// </summary>
+        public static string SqlScriptMissingIdentity {
+            get {
+                return ResourceManager.GetString("SqlScriptMissingIdentity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The SQL server version &apos;{0}&apos; is not supported..
         /// </summary>
         public static string SqlServerVersionNotSupported {

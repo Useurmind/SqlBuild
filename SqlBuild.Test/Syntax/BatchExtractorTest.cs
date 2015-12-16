@@ -20,11 +20,10 @@ namespace SqlBuild.Test.Syntax
 
         public BatchExtractorTest()
         {
-            this.batchSeparator = new BatchExtractor()
-                                 {
-                                     ParserFactory = new ParserFactory(),
-                                     Log = new ExceptionSqlBuildLog()
-                                 };
+            this.batchSeparator = new BatchExtractor(
+                                     parserFactory: new ParserFactory(),
+                                     log: new ExceptionSqlBuildLog()
+                                 );
             serverVersion = ServerVersion.SqlServer2014;
         }
 

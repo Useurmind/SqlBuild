@@ -55,8 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Container\ContainerFactory.cs" />
-    <Compile Include="Deployment\ConnectionStringFactory.cs" />
-    <Compile Include="Deployment\ScriptExecutor.cs" />
+    <Compile Include="Database\SqlBuildRepository.cs" />
+    <Compile Include="Database\ScriptExecutor.cs" />
+    <Compile Include="Database\ConnectionStringFactory.cs" />
     <Compile Include="Errors.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -92,12 +93,19 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="SqlScripts\SqlBuildInfoSchema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Errors.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Deployment\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

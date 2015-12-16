@@ -11,6 +11,7 @@ using Microsoft.Build.Utilities;
 using NSubstitute;
 
 using SqlBuild.Model;
+using SqlBuild.Test;
 using SqlBuild.Utility;
 
 using Xunit;
@@ -27,23 +28,31 @@ namespace SqlBuild.MsBuild.Test
         {
             input = new TaskItemMapperInput();
             output = new SqlBuildSetup();
-            mapper = new TaskItemMapper();
+            mapper = new TaskItemMapper()
+                         {
+                             Log = new ExceptionSqlBuildLog()
+                         };
         }
 
         [Fact]
         public void a_single_named_global_configuration_is_mapped_correctly()
         {
+            string projectName = "slkdfjgdsofigu";
+            string sessionKey = "sdgkjdsgsdfg";
             string globalConfigurationName = "alsfjsdlkfjslk";
             var globalConfigItem = new TaskItem(globalConfigurationName);
+            globalConfigItem.SetMetadata(ModelExtensions.GetMetadataName<SqlGlobalConfiguration, string>(x => x.ProjectName), projectName);
+            globalConfigItem.SetMetadata(ModelExtensions.GetMetadataName<SqlGlobalConfiguration, string>(x => x.SqlBuildInfoSessionKey), sessionKey);
 
             input.GlobalConfigurations = new[] { globalConfigItem };
-
 
             mapper.MapTo(input, output);
 
             var globalConfig = output.GlobalConfigurations[globalConfigurationName];
 
             Assert.Equal(globalConfigurationName, globalConfig.Key);
+            Assert.Equal(projectName, globalConfig.ProjectName);
+            Assert.Equal(sessionKey, globalConfig.SqlBuildInfoSessionKey);
         }
 
         [Fact]

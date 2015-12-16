@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlBuild.Test", "SqlBuild.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlBuild.ExampleProject", "SqlBuild.ExampleProject\SqlBuild.ExampleProject.csproj", "{EFEF35E0-EC8D-40EB-96A5-DEC7F6EDE7A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlBuild.Documentation", "SqlBuild.Documentation\SqlBuild.Documentation.csproj", "{7B17B546-D9E3-4E9B-849C-B55A9BA2F07D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{EFEF35E0-EC8D-40EB-96A5-DEC7F6EDE7A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFEF35E0-EC8D-40EB-96A5-DEC7F6EDE7A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFEF35E0-EC8D-40EB-96A5-DEC7F6EDE7A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B17B546-D9E3-4E9B-849C-B55A9BA2F07D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B17B546-D9E3-4E9B-849C-B55A9BA2F07D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B17B546-D9E3-4E9B-849C-B55A9BA2F07D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B17B546-D9E3-4E9B-849C-B55A9BA2F07D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

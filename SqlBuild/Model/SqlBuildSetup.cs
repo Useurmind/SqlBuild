@@ -85,7 +85,11 @@ namespace SqlBuild.Model
             ScriptMappings = new Dictionary<string, SqlScriptMapping>();
 
             Connections.Add(Constants.DefaultKey, new SqlConnection() { Key = Constants.DefaultKey });
-            GlobalConfigurations.Add(Constants.DefaultKey, new SqlGlobalConfiguration() { Key = Constants.DefaultKey });
+            GlobalConfigurations.Add(Constants.DefaultKey, new SqlGlobalConfiguration()
+                                                               {
+                                                                   Key = Constants.DefaultKey,
+                                                                   SqlBuildInfoSessionKey = Constants.DefaultKey
+                                                               });
             ScriptConfigurations.Add(Constants.DefaultKey, new SqlScriptConfiguration() { Key = Constants.DefaultKey });
             Logins.Add(Constants.DefaultKey, new SqlLogin() { Key = Constants.DefaultKey });
             Sessions.Add(Constants.DefaultKey, new SqlSession()
@@ -109,6 +113,8 @@ namespace SqlBuild.Model
             ConnectSessions();
 
             ConnectMappings();
+
+            this.ConnectGlobalConfigurations();
         }
 
         private void SetGlobalConfiguration()
@@ -180,6 +186,22 @@ namespace SqlBuild.Model
                 else
                 {
                     scriptMapping.Session = session;
+                }
+            }
+        }
+
+        private void ConnectGlobalConfigurations()
+        {
+            foreach (var globalConfig in GlobalConfigurations.Values)
+            {
+                SqlSession session = null;
+                if (!Sessions.TryGetValue(globalConfig.SqlBuildInfoSessionKey, out session))
+                {
+                    this.SqlBuildLog.WriteReferencedElementNotFound<SqlGlobalConfiguration, SqlSession>(globalConfig.Key, globalConfig.SqlBuildInfoSessionKey);
+                }
+                else
+                {
+                    globalConfig.SqlBuildInfoSession = session;
                 }
             }
         }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 using SqlBuild.Model;
 
-namespace SqlBuild.Deployment
+namespace SqlBuild.Database
 {
-    public class ConnectionStringFactory
+    public static class ConnectionStringFactory
     {
-        public string CreateConnectionString(SqlConnection connection, SqlLogin login)
+        public static string CreateConnectionString(SqlConnection connection, SqlLogin login)
         {
             var connStringBuilder = new StringBuilder();
 

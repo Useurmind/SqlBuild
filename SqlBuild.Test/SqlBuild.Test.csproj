@@ -67,11 +67,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Container\ContainerFactoryTest.cs" />
-    <Compile Include="Deployment\ConnectionStringFactoryTest.cs" />
+    <Compile Include="Database\SqlBuildRepositoryTest.cs" />
+    <Compile Include="Database\ConnectionStringFactoryTest.cs" />
     <Compile Include="ExceptionSqlBuildLog.cs" />
     <Compile Include="Model\ModelExtensionsTest.cs" />
     <Compile Include="Model\SqlBuildSetupTest.cs" />
     <Compile Include="Model\SqlLoginTest.cs" />
+    <Compile Include="Model\SqlScriptMappingTest.cs" />
+    <Compile Include="Model\SqlScriptTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlBuilderTest.cs" />
     <Compile Include="Syntax\BatchExtractorTest.cs" />
@@ -88,11 +91,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestData\create_three_procedures.sql" />
+    <Content Include="TestData\create_three_procedures.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\existing_script.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\script_with_parsing_errors.sql" />
+    <Content Include="TestData\script_with_parsing_errors.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\simple_select.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

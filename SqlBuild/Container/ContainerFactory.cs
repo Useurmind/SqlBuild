@@ -38,11 +38,10 @@ namespace SqlBuild.Container
 
             this.builder.Register(c => new ParserFactory() { SqlBuildLog = c.Resolve<ISqlBuildLog>() }).As<IParserFactory>();
 
-            this.builder.Register(c => new BatchExtractor()
-                                           {
-                                               ParserFactory = c.Resolve<IParserFactory>(),
-                                               Log = c.Resolve<ISqlBuildLog>()
-                                           }).As<IBatchExtractor>();
+            this.builder.Register(c => new BatchExtractor(
+                                              parserFactory: c.Resolve<IParserFactory>(),
+                                              log: c.Resolve<ISqlBuildLog>()
+                                            )).As<IBatchExtractor>();
         }
 
         /// <summary>

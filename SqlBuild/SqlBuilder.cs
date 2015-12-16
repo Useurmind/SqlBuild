@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using SqlBuild.Deployment;
 using SqlBuild.Logging;
 using SqlBuild.Model;
 using SqlBuild.Syntax;

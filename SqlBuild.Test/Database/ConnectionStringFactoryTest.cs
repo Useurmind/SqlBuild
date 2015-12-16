@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using SqlBuild.Deployment;
+using SqlBuild.Database;
 using SqlBuild.Model;
 
 using Xunit;
@@ -13,13 +13,6 @@ namespace SqlBuild.Test.Deployment
 {
     public class ConnectionStringFactoryTest
     {
-        private ConnectionStringFactory factory;
-
-        public ConnectionStringFactoryTest()
-        {
-            factory = new ConnectionStringFactory();
-        }
-
         [Fact]
         public void server_database_integratedsecurity()
         {
@@ -34,7 +27,7 @@ namespace SqlBuild.Test.Deployment
                                 IntegratedSecurity = Constants.IntegratedSecurity.True
                             };
 
-            var connectionString = factory.CreateConnectionString(connection, login);
+            var connectionString = ConnectionStringFactory.CreateConnectionString(connection, login);
 
             Assert.Equal(expectedConnectionString, connectionString);
         }
@@ -52,7 +45,7 @@ namespace SqlBuild.Test.Deployment
                                 IntegratedSecurity = Constants.IntegratedSecurity.True
                             };
 
-            var connectionString = factory.CreateConnectionString(connection, login);
+            var connectionString = ConnectionStringFactory.CreateConnectionString(connection, login);
 
             Assert.Equal(expectedConnectionString, connectionString);
         }
@@ -70,7 +63,7 @@ namespace SqlBuild.Test.Deployment
             login.UserName = "user";
             login.Password = "password";
 
-            var connectionString = factory.CreateConnectionString(connection, login);
+            var connectionString = ConnectionStringFactory.CreateConnectionString(connection, login);
 
             Assert.Equal(expectedConnectionString, connectionString);
         }
@@ -87,7 +80,7 @@ namespace SqlBuild.Test.Deployment
             login.UserName = "user";
             login.Password = "password";
 
-            var connectionString = factory.CreateConnectionString(connection, login);
+            var connectionString = ConnectionStringFactory.CreateConnectionString(connection, login);
 
             Assert.Equal(expectedConnectionString, connectionString);
         }

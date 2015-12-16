@@ -8,6 +8,10 @@ namespace SqlBuild.Model
 {
     public static class Constants
     {
+        public const string SqlBuildSchemaName = "SqlBuild";
+
+        public const string SqlBuildInfoTableName = "SqlBuildInfo";
+
         public const string DefaultKey = "Default";
 
         public const string KeyPropertyPostfix = "Key";

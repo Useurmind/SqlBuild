@@ -83,6 +83,10 @@
       <Project>{45593ef6-3ec2-469e-a4ee-b7b35b09f0fc}</Project>
       <Name>SqlBuild.MsBuild</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SqlBuild.Test\SqlBuild.Test.csproj">
+      <Project>{3d9ccb76-6265-42ab-a961-4c71f882a844}</Project>
+      <Name>SqlBuild.Test</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SqlBuild\SqlBuild.csproj">
       <Project>{d3b8336c-79de-426b-ae39-ea6304b5d940}</Project>
       <Name>SqlBuild</Name>

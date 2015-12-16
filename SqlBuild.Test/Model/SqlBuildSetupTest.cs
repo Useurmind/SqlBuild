@@ -42,6 +42,7 @@ namespace SqlBuild.Test.Model
             Assert.NotNull(setup.DefaultScriptMapping);
             Assert.NotNull(setup.DefaultSession);
             
+            Assert.Equal(Constants.DefaultKey, setup.DefaultGlobalConfiguration.SqlBuildInfoSessionKey);
 
             Assert.Equal(Constants.DefaultKey, setup.DefaultConnection.Key);
             Assert.Equal(Constants.DefaultKey, setup.DefaultLogin.Key);
@@ -70,11 +71,12 @@ namespace SqlBuild.Test.Model
 
             Assert.Same(setup.DefaultConnection, setup.DefaultSession.Connection);
             Assert.Same(setup.DefaultLogin, setup.DefaultSession.Login);
+
+            Assert.Same(setup.DefaultSession, setup.DefaultGlobalConfiguration.SqlBuildInfoSession);
         }
         [Fact]
         public void when_connect_graph_was_called_with_non_default_elements_all_non_default_elements_are_connected()
         {
-            var globalConfiguration = new SqlGlobalConfiguration() { Key = "aslfgjsdhlkghh" };
             var configuration = new SqlScriptConfiguration()
             {
                 Key = "fdhjfzt7er5"
@@ -93,6 +95,11 @@ namespace SqlBuild.Test.Model
                 ConfigurationKey = configuration.Key,
                 SessionKey = session.Key
             };
+            var globalConfiguration = new SqlGlobalConfiguration()
+                                          {
+                                              Key = "aslfgjsdhlkghh",
+                                              SqlBuildInfoSessionKey = session.Key
+                                          };
             setup.ActiveGlobalConfigurationKey = globalConfiguration.Key;
 
             setup.GlobalConfigurations.Add(globalConfiguration.Key, globalConfiguration);
@@ -111,6 +118,8 @@ namespace SqlBuild.Test.Model
 
             Assert.Same(configuration, mapping.Configuration);
             Assert.Same(session, mapping.Session);
+
+            Assert.Same(session, globalConfiguration.SqlBuildInfoSession);
         }
 
         [Fact]
