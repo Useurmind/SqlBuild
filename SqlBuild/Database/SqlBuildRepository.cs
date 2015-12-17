@@ -67,7 +67,7 @@ namespace SqlBuild.Database
                                              Identity = @"SqlScripts\SqlBuildInfoSchema.sql"
                                          };
 
-            batchExtractor.ExtractBatches(createSchemaScript, session.Connection.ServerVersion);
+            batchExtractor.ExtractBatches(createSchemaScript);
 
             scriptExecutor.ExecuteScript(createSchemaScript);
         }

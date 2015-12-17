@@ -58,7 +58,8 @@ namespace SqlBuild.MsBuild
                 var globalConfig = setup.GlobalConfigurations.GetOrCreate(globalConfigItem.ItemSpec);
 
                 SetIfNotEmpty(globalConfigItem, globalConfig, globalConfig.GetProperty(x => x.ProjectName));
-                SetKeyIfNotEmpty(globalConfigItem, globalConfig, globalConfig.GetProperty(x => x.SqlBuildInfoSessionKey));
+                SetKeyIfNotEmpty(globalConfigItem, globalConfig, globalConfig.GetProperty(x => x.SqlBuildInfoLoginKey));
+                SetKeyIfNotEmpty(globalConfigItem, globalConfig, globalConfig.GetProperty(x => x.ConnectionKey));
             }
 
             Log.WriteTraceFormat("Mapping {0} SqlScriptConfiguration items", input.ScriptConfigurations.Count());
@@ -67,22 +68,13 @@ namespace SqlBuild.MsBuild
                 var scriptConfig = setup.ScriptConfigurations.GetOrCreate(scriptConfigItem.ItemSpec);
             }
 
-            Log.WriteTraceFormat("Mapping {0} SqlSession items", input.Sessions.Count());
-            foreach (var sessionItem in input.Sessions)
-            {
-                var session = setup.Sessions.GetOrCreate(sessionItem.ItemSpec);
-
-                SetKeyIfNotEmpty(sessionItem, session, session.GetProperty(x => x.LoginKey));
-                SetKeyIfNotEmpty(sessionItem, session, session.GetProperty(x => x.ConnectionKey));
-            }
-
             Log.WriteTraceFormat("Mapping {0} SqlScriptMapping items", input.ScriptMappings.Count());
             foreach (var scriptMappingItem in input.ScriptMappings)
             {
                 var scriptMapping = setup.ScriptMappings.GetOrCreate(scriptMappingItem.ItemSpec);
 
                 SetIfNotEmpty(scriptMappingItem, scriptMapping, scriptMapping.GetProperty(x => x.ScriptPattern));
-                SetKeyIfNotEmpty(scriptMappingItem, scriptMapping, scriptMapping.GetProperty(x => x.SessionKey));
+                SetKeyIfNotEmpty(scriptMappingItem, scriptMapping, scriptMapping.GetProperty(x => x.LoginKey));
                 SetKeyIfNotEmpty(scriptMappingItem, scriptMapping, scriptMapping.GetProperty(x => x.ConfigurationKey));
             }
 

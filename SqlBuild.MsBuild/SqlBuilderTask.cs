@@ -114,13 +114,6 @@ namespace SqlBuild.MsBuild
         {
             try
             {
-                if (sqlBuildContainer == null)
-                {
-                    this.Log.LogCommandLine(MessageImportance.Low, "Creating DI container...");
-                    var containerFactory = new ContainerFactory(new TaskLog(this.Log));
-                    sqlBuildContainer = containerFactory.CreateContainer();
-                }
-
                 this.EnsureTaskItemArrays();
 
                 var mapperInput = new TaskItemMapperInput()
@@ -134,12 +127,20 @@ namespace SqlBuild.MsBuild
                                           Sessions = Sessions
                                       };
 
-                var sqlSetup = sqlBuildContainer.Resolve<SqlBuildSetup>();
+                var log = new TaskLog(this.Log);
+                var sqlSetup = new SqlBuildSetup() { SqlBuildLog = log };
 
-                var mapper = new TaskItemMapper() { Log = sqlBuildContainer.Resolve<ISqlBuildLog>() };
+                var mapper = new TaskItemMapper() { Log = log };
 
                 this.Log.LogCommandLine(MessageImportance.Low, "Mapping input task items to sql build setup...");
                 mapper.MapTo(mapperInput, sqlSetup);
+
+                if (sqlBuildContainer == null)
+                {
+                    this.Log.LogCommandLine(MessageImportance.Low, "Creating DI container...");
+                    var containerFactory = new ContainerFactory(log, sqlSetup);
+                    sqlBuildContainer = containerFactory.CreateContainer();
+                }
 
                 var sqlBuilder = sqlBuildContainer.Resolve<ISqlBuilder>();
 

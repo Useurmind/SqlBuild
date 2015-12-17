@@ -21,11 +21,16 @@ namespace SqlBuild.Container
         /// <summary>
         ///     Initializes a new instance of the <see cref="ContainerFactory" /> class.
         /// </summary>
-        public ContainerFactory(ISqlBuildLog sqlBuildLog)
+        public ContainerFactory(ISqlBuildLog sqlBuildLog, SqlBuildSetup setup)
         {
+            setup.ConnectReferences();
+
             this.builder = new ContainerBuilder();
 
             this.builder.RegisterInstance(sqlBuildLog).As<ISqlBuildLog>();
+            this.builder.RegisterInstance(setup);
+            this.builder.RegisterInstance(setup.ActiveGlobalConfiguration.Connection);
+            this.builder.RegisterInstance(setup.ActiveGlobalConfiguration);
 
             this.builder.Register(c => new SqlBuilder()
                                            {
@@ -34,9 +39,9 @@ namespace SqlBuild.Container
                                                BatchExtractor = c.Resolve<IBatchExtractor>()
                                            }).As<ISqlBuilder>();
 
-            this.builder.Register(c => new SqlBuildSetup() { SqlBuildLog = c.Resolve<ISqlBuildLog>() }).SingleInstance();
+            this.builder.Register(c => new SessionFactory(c.Resolve<SqlConnection>())).As<ISessionFactory>();
 
-            this.builder.Register(c => new ParserFactory() { SqlBuildLog = c.Resolve<ISqlBuildLog>() }).As<IParserFactory>();
+            this.builder.Register(c => new ParserFactory(c.Resolve<ISqlBuildLog>(), c.Resolve<SqlConnection>().ServerVersion)).As<IParserFactory>();
 
             this.builder.Register(c => new BatchExtractor(
                                               parserFactory: c.Resolve<IParserFactory>(),

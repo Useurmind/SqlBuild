@@ -28,8 +28,6 @@ namespace SqlBuild
 
         public void Compile()
         {
-            Setup.ConnectReferences();
-
             IEnumerable<SqlScript> remainingScripts = Setup.Scripts;
 
             Log.WriteTrace("Assigning scripts to script mappings");
@@ -46,7 +44,7 @@ namespace SqlBuild
 
                 foreach (var matchingScript in mapping.MatchingScripts)
                 {
-                    BatchExtractor.ExtractBatches(matchingScript, mapping.Session.Connection.ServerVersion);
+                    BatchExtractor.ExtractBatches(matchingScript);
                 }
             }
         }

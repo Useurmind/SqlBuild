@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Autofac;
 
 using SqlBuild.Container;
+using SqlBuild.Model;
 
 using Xunit;
 
@@ -17,7 +18,7 @@ namespace SqlBuild.Test.Container
         [Fact]
         public void creating_container_and_resolving_sql_builder_works()
         {
-            var containerFactory = new ContainerFactory(new ExceptionSqlBuildLog());
+            var containerFactory = new ContainerFactory(new ExceptionSqlBuildLog(), new SqlBuildSetup() { SqlBuildLog = new ExceptionSqlBuildLog() });
 
             var container = containerFactory.CreateContainer();
 

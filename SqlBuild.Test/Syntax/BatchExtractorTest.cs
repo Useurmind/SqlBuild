@@ -21,10 +21,9 @@ namespace SqlBuild.Test.Syntax
         public BatchExtractorTest()
         {
             this.batchSeparator = new BatchExtractor(
-                                     parserFactory: new ParserFactory(),
+                                     parserFactory: new ParserFactory(new ExceptionSqlBuildLog(), ServerVersion.SqlServer2014),
                                      log: new ExceptionSqlBuildLog()
                                  );
-            serverVersion = ServerVersion.SqlServer2014;
         }
 
         [Fact]
@@ -53,7 +52,7 @@ end";
                                     Identity = Path.GetFullPath(@"..\..\TestData\create_three_procedures.sql")
                                 };
 
-            this.batchSeparator.ExtractBatches(sqlScript, serverVersion);
+            this.batchSeparator.ExtractBatches(sqlScript);
 
             var batch1 = sqlScript.Batches.ElementAt(0);
             var batch2 = sqlScript.Batches.ElementAt(1);
@@ -86,7 +85,7 @@ end";
             var exception = Assert.Throws<SqlBuildException>(
                 () =>
                     {
-                        this.batchSeparator.ExtractBatches(sqlScript, serverVersion);
+                        this.batchSeparator.ExtractBatches(sqlScript);
                     });
         }
     }

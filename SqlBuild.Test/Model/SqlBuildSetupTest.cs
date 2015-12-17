@@ -32,7 +32,6 @@ namespace SqlBuild.Test.Model
             Assert.Equal(1, setup.ScriptConfigurations.Count);
             Assert.Equal(1, setup.Connections.Count);
             Assert.Equal(1, setup.Logins.Count);
-            Assert.Equal(1, setup.Sessions.Count);
             Assert.Equal(1, setup.ScriptMappings.Count);
             Assert.Equal(0, setup.Scripts.Count);
 
@@ -40,22 +39,18 @@ namespace SqlBuild.Test.Model
             Assert.NotNull(setup.DefaultLogin);
             Assert.NotNull(setup.DefaultScriptConfiguration);
             Assert.NotNull(setup.DefaultScriptMapping);
-            Assert.NotNull(setup.DefaultSession);
             
-            Assert.Equal(Constants.DefaultKey, setup.DefaultGlobalConfiguration.SqlBuildInfoSessionKey);
+            Assert.Equal(Constants.DefaultKey, setup.DefaultGlobalConfiguration.SqlBuildInfoLoginKey);
+            Assert.Equal(Constants.DefaultKey, setup.DefaultGlobalConfiguration.ConnectionKey);
 
             Assert.Equal(Constants.DefaultKey, setup.DefaultConnection.Key);
             Assert.Equal(Constants.DefaultKey, setup.DefaultLogin.Key);
             Assert.Equal(Constants.DefaultKey, setup.DefaultScriptConfiguration.Key);
             Assert.Equal(Constants.DefaultKey, setup.DefaultScriptMapping.Key);
-            Assert.Equal(Constants.DefaultKey, setup.DefaultSession.Key);
             Assert.Equal(Constants.DefaultKey, setup.DefaultScriptMapping.Key);
-
-            Assert.Equal(Constants.DefaultKey, setup.Sessions.First().Value.LoginKey);
-            Assert.Equal(Constants.DefaultKey, setup.Sessions.First().Value.ConnectionKey);
             
             Assert.True(string.IsNullOrEmpty(setup.ScriptMappings.First().Value.ScriptPattern));
-            Assert.Equal(Constants.DefaultKey, setup.ScriptMappings.First().Value.SessionKey);
+            Assert.Equal(Constants.DefaultKey, setup.ScriptMappings.First().Value.LoginKey);
             Assert.Equal(Constants.DefaultKey, setup.ScriptMappings.First().Value.ConfigurationKey);
         }
 
@@ -66,13 +61,11 @@ namespace SqlBuild.Test.Model
 
             Assert.Same(setup.DefaultGlobalConfiguration, setup.ActiveGlobalConfiguration);
 
-            Assert.Same(setup.DefaultSession, setup.DefaultScriptMapping.Session);
+            Assert.Same(setup.DefaultLogin, setup.DefaultScriptMapping.Login);
             Assert.Same(setup.DefaultScriptConfiguration, setup.DefaultScriptMapping.Configuration);
 
-            Assert.Same(setup.DefaultConnection, setup.DefaultSession.Connection);
-            Assert.Same(setup.DefaultLogin, setup.DefaultSession.Login);
-
-            Assert.Same(setup.DefaultSession, setup.DefaultGlobalConfiguration.SqlBuildInfoSession);
+            Assert.Same(setup.DefaultLogin, setup.DefaultGlobalConfiguration.SqlBuildInfoLogin);
+            Assert.Same(setup.DefaultConnection, setup.DefaultGlobalConfiguration.Connection);
         }
         [Fact]
         public void when_connect_graph_was_called_with_non_default_elements_all_non_default_elements_are_connected()
@@ -83,22 +76,17 @@ namespace SqlBuild.Test.Model
             };
             var login = new SqlLogin() { Key = "sgfdhgdsfg" };
             var connection = new SqlConnection() { Key = "dlknjgfdlkjg" };
-            var session = new SqlSession()
-            {
-                Key = "sesionasdsadfgsfg",
-                ConnectionKey = connection.Key,
-                LoginKey = login.Key
-            };
             var mapping = new SqlScriptMapping()
             {
                 Key = "afdfshf",
                 ConfigurationKey = configuration.Key,
-                SessionKey = session.Key
+                LoginKey = login.Key
             };
             var globalConfiguration = new SqlGlobalConfiguration()
                                           {
                                               Key = "aslfgjsdhlkghh",
-                                              SqlBuildInfoSessionKey = session.Key
+                                              SqlBuildInfoLoginKey = login.Key,
+                                              ConnectionKey = connection.Key
                                           };
             setup.ActiveGlobalConfigurationKey = globalConfiguration.Key;
 
@@ -106,64 +94,17 @@ namespace SqlBuild.Test.Model
             setup.ScriptConfigurations.Add(configuration.Key, configuration);
             setup.Logins.Add(login.Key, login);
             setup.Connections.Add(connection.Key, connection);
-            setup.Sessions.Add(session.Key, session);
             setup.ScriptMappings.Add(mapping.Key, mapping);
 
             setup.ConnectReferences();
 
             Assert.Same(globalConfiguration, setup.ActiveGlobalConfiguration);
 
-            Assert.Same(login, session.Login);
-            Assert.Same(connection, session.Connection);
-
             Assert.Same(configuration, mapping.Configuration);
-            Assert.Same(session, mapping.Session);
+            Assert.Same(login, mapping.Login);
 
-            Assert.Same(session, globalConfiguration.SqlBuildInfoSession);
-        }
-
-        [Fact]
-        public void when_connect_graph_was_called_with_missing_login_in_session_error_is_generated()
-        {
-            var connection = new SqlConnection() { Key = "sgfdhgdsfg" };
-            var sessionMissingLogin = new SqlSession()
-                                          {
-                                              Key = "sesionasdsadfgsfg",
-                                              ConnectionKey = connection.Key,
-                                              LoginKey = "slkdfgjsdflkhgshg"
-                                          };
-
-            setup.Connections.Add(connection.Key, connection);
-            setup.Sessions.Add(sessionMissingLogin.Key, sessionMissingLogin);
-
-            var exception = Assert.Throws<SqlBuildException>(() => setup.ConnectReferences());
-
-            Assert.True(exception.Message.Contains(typeof(SqlSession).Name));
-            Assert.True(exception.Message.Contains(typeof(SqlLogin).Name));
-            Assert.True(exception.Message.Contains(sessionMissingLogin.Key));
-            Assert.True(exception.Message.Contains(sessionMissingLogin.LoginKey));
-        }
-
-        [Fact]
-        public void when_connect_graph_was_called_with_missing_connection_in_session_error_is_generated()
-        {
-            var login = new SqlLogin() { Key = "sgfdhgdsfg" };
-            var sessionMissingLogin = new SqlSession()
-            {
-                Key = "sesionasdsadfgsfg",
-                ConnectionKey = "asdflköjsdlft",
-                LoginKey = login.Key
-            };
-
-            setup.Logins.Add(login.Key, login);
-            setup.Sessions.Add(sessionMissingLogin.Key, sessionMissingLogin);
-
-            var exception = Assert.Throws<SqlBuildException>(() => setup.ConnectReferences());
-
-            Assert.True(exception.Message.Contains(typeof(SqlSession).Name));
-            Assert.True(exception.Message.Contains(typeof(SqlConnection).Name));
-            Assert.True(exception.Message.Contains(sessionMissingLogin.Key));
-            Assert.True(exception.Message.Contains(sessionMissingLogin.ConnectionKey));
+            Assert.Same(login, globalConfiguration.SqlBuildInfoLogin);
+            Assert.Same(connection, globalConfiguration.Connection);
         }
 
         [Fact]
@@ -171,22 +112,15 @@ namespace SqlBuild.Test.Model
         {
             var login = new SqlLogin() { Key = "sgfdhgdsfg" };
             var connection = new SqlConnection() { Key = "dlknjgfdlkjg" };
-            var session= new SqlSession()
-            {
-                Key = "sesionasdsadfgsfg",
-                ConnectionKey = connection.Key,
-                LoginKey = login.Key
-            };
             var mapping = new SqlScriptMapping()
                               {
                                   Key = "afdfshf",
                                   ConfigurationKey = "öljhflkztrz",
-                                  SessionKey = session.Key
+                                  LoginKey = login.Key
                               };
 
             setup.Logins.Add(login.Key, login);
             setup.Connections.Add(connection.Key, connection);
-            setup.Sessions.Add(session.Key, session);
             setup.ScriptMappings.Add(mapping.Key, mapping);
 
             var exception = Assert.Throws<SqlBuildException>(() => setup.ConnectReferences());
@@ -208,7 +142,7 @@ namespace SqlBuild.Test.Model
             {
                 Key = "afdfshf",
                 ConfigurationKey = configuration.Key,
-                SessionKey = "asdfshfgjkzu"
+                LoginKey = "asdfshfgjkzu"
             };
 
             setup.ScriptConfigurations.Add(configuration.Key, configuration);
@@ -219,7 +153,7 @@ namespace SqlBuild.Test.Model
             Assert.True(exception.Message.Contains(typeof(SqlScriptMapping).Name));
             Assert.True(exception.Message.Contains(typeof(SqlSession).Name));
             Assert.True(exception.Message.Contains(mapping.Key));
-            Assert.True(exception.Message.Contains(mapping.SessionKey));
+            Assert.True(exception.Message.Contains(mapping.LoginKey));
         }
     }
 }

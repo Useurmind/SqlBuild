@@ -21,11 +21,14 @@ namespace SqlBuild.Test
 
         public SqlBuilderTest()
         {
-            var containerFactory = new ContainerFactory(new ExceptionSqlBuildLog());
+            setup = new SqlBuildSetup() { SqlBuildLog = new ExceptionSqlBuildLog() };
+
+            setup.Connections[Constants.DefaultKey].ServerVersion = ServerVersion.SqlServer2008;
+
+            var containerFactory = new ContainerFactory(new ExceptionSqlBuildLog(), setup);
 
             var container = containerFactory.CreateContainer();
 
-            setup = container.Resolve<SqlBuildSetup>();
             sqlBuilder = container.Resolve<ISqlBuilder>();
         }
 
@@ -35,9 +38,7 @@ namespace SqlBuild.Test
             setup.Scripts.Add(new SqlScript()
                                   {
                                       Identity = @"..\..\TestData\create_three_procedures.sql"
-                                  });
-
-            setup.Connections[Constants.DefaultKey].ServerVersion = ServerVersion.SqlServer2008;
+                                  });            
 
 
             sqlBuilder.Compile();

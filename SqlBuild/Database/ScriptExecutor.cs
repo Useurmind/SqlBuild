@@ -18,18 +18,18 @@ namespace SqlBuild.Database
 
     public class ScriptExecutor : IScriptExecutor
     {
-        private SqlConnection dbConnection;
+        private SqlSession session;
 
-        public ScriptExecutor(SqlConnection dbConnection)
+        public ScriptExecutor(SqlSession session)
         {
-            this.dbConnection = dbConnection;
+            this.session = session;
         }
 
         public void ExecuteScript(SqlScript script)
         {
             foreach (var batch in script.Batches)
             {
-                var command = dbConnection.CreateCommand();
+                var command = session.OpenDBConnection().CreateCommand();
 
                 command.CommandText = batch.SqlText;
                 command.CommandType = CommandType.Text;

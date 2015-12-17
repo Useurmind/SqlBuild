@@ -12,11 +12,14 @@ namespace SqlBuild.Model
     {
         private System.Data.SqlClient.SqlConnection dbConnection;
 
-        public string LoginKey { get; set; }
-        public string ConnectionKey { get; set; }
+        public SqlLogin Login { get; private set; }
+        public SqlConnection Connection { get; private set; }
 
-        public SqlLogin Login { get; set; }
-        public SqlConnection Connection { get; set; }
+        public SqlSession(SqlLogin login, SqlConnection connection)
+        {
+            Login = login;
+            Connection = connection;
+        }
 
         public System.Data.SqlClient.SqlConnection OpenDBConnection()
         {

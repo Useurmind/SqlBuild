@@ -46,14 +46,6 @@ namespace SqlBuild.Model
             }
         }
 
-        public SqlSession DefaultSession
-        {
-            get
-            {
-                return Sessions[Constants.DefaultKey];
-            }
-        }
-
         public SqlScriptMapping DefaultScriptMapping
         {
             get
@@ -66,7 +58,6 @@ namespace SqlBuild.Model
         public IDictionary<string, SqlGlobalConfiguration> GlobalConfigurations { get; private set; }
         public IDictionary<string, SqlScriptConfiguration> ScriptConfigurations { get; private set; }
         public IDictionary<string, SqlLogin> Logins { get; private set; }
-        public IDictionary<string, SqlSession> Sessions { get; private set; }
         public IDictionary<string, SqlScriptMapping> ScriptMappings { get; private set; }
         public IList<SqlScript> Scripts { get; private set; }
 
@@ -81,27 +72,22 @@ namespace SqlBuild.Model
             ScriptConfigurations = new Dictionary<string, SqlScriptConfiguration>();
             Logins = new Dictionary<string, SqlLogin>();
             Scripts = new List<SqlScript>();
-            Sessions = new Dictionary<string, SqlSession>();
             ScriptMappings = new Dictionary<string, SqlScriptMapping>();
 
             Connections.Add(Constants.DefaultKey, new SqlConnection() { Key = Constants.DefaultKey });
             GlobalConfigurations.Add(Constants.DefaultKey, new SqlGlobalConfiguration()
                                                                {
                                                                    Key = Constants.DefaultKey,
-                                                                   SqlBuildInfoSessionKey = Constants.DefaultKey
+                                                                   SqlBuildInfoLoginKey = Constants.DefaultKey,
+                                                                   ConnectionKey = Constants.DefaultKey
                                                                });
             ScriptConfigurations.Add(Constants.DefaultKey, new SqlScriptConfiguration() { Key = Constants.DefaultKey });
             Logins.Add(Constants.DefaultKey, new SqlLogin() { Key = Constants.DefaultKey });
-            Sessions.Add(Constants.DefaultKey, new SqlSession()
-                                                   {
-                                                       Key = Constants.DefaultKey,
-                                                       ConnectionKey = Constants.DefaultKey,
-                                                       LoginKey = Constants.DefaultKey,
-                                                   });
+
             ScriptMappings.Add(Constants.DefaultKey, new SqlScriptMapping()
                                                          {
                                                              Key = Constants.DefaultKey,
-                                                             SessionKey = Constants.DefaultKey,
+                                                             LoginKey = Constants.DefaultKey,
                                                              ConfigurationKey = Constants.DefaultKey
                                                          });
         }
@@ -109,8 +95,6 @@ namespace SqlBuild.Model
         public void ConnectReferences()
         {
             SetGlobalConfiguration();
-
-            ConnectSessions();
 
             ConnectMappings();
 
@@ -132,34 +116,6 @@ namespace SqlBuild.Model
             }
         }
 
-        private void ConnectSessions()
-        {
-            foreach (var session in Sessions.Values)
-            {
-                SqlLogin login = null;
-                if (!Logins.TryGetValue(session.LoginKey, out login))
-                {
-                    this.SqlBuildLog.WriteReferencedElementNotFound<SqlSession, SqlLogin>(session.Key, session.LoginKey);
-                }
-                else
-                {
-                    session.Login = login;
-                }
-
-                SqlConnection connection = null;
-                if (!Connections.TryGetValue(session.ConnectionKey, out connection))
-                {
-                    this.SqlBuildLog.WriteReferencedElementNotFound<SqlSession, SqlConnection>(
-                        session.Key,
-                        session.ConnectionKey);
-                }
-                else
-                {
-                    session.Connection = connection;
-                }
-            }
-        }
-
         private void ConnectMappings()
         {
             foreach (var scriptMapping in ScriptMappings.Values)
@@ -176,16 +132,16 @@ namespace SqlBuild.Model
                     scriptMapping.Configuration = configuration;
                 }
 
-                SqlSession session;
-                if (!Sessions.TryGetValue(scriptMapping.SessionKey, out session))
+                SqlLogin login;
+                if (!Logins.TryGetValue(scriptMapping.LoginKey, out login))
                 {
                     this.SqlBuildLog.WriteReferencedElementNotFound<SqlScriptMapping, SqlSession>(
                         scriptMapping.Key,
-                        scriptMapping.SessionKey);
+                        scriptMapping.LoginKey);
                 }
                 else
                 {
-                    scriptMapping.Session = session;
+                    scriptMapping.Login = login;
                 }
             }
         }
@@ -194,14 +150,24 @@ namespace SqlBuild.Model
         {
             foreach (var globalConfig in GlobalConfigurations.Values)
             {
-                SqlSession session = null;
-                if (!Sessions.TryGetValue(globalConfig.SqlBuildInfoSessionKey, out session))
+                SqlLogin login = null;
+                if (!Logins.TryGetValue(globalConfig.SqlBuildInfoLoginKey, out login))
                 {
-                    this.SqlBuildLog.WriteReferencedElementNotFound<SqlGlobalConfiguration, SqlSession>(globalConfig.Key, globalConfig.SqlBuildInfoSessionKey);
+                    this.SqlBuildLog.WriteReferencedElementNotFound<SqlGlobalConfiguration, SqlLogin>(globalConfig.Key, globalConfig.SqlBuildInfoLoginKey);
                 }
                 else
                 {
-                    globalConfig.SqlBuildInfoSession = session;
+                    globalConfig.SqlBuildInfoLogin = login;
+                }
+
+                SqlConnection connection = null;
+                if (!Connections.TryGetValue(globalConfig.ConnectionKey, out connection))
+                {
+                    this.SqlBuildLog.WriteReferencedElementNotFound<SqlGlobalConfiguration, SqlConnection>(globalConfig.Key, globalConfig.ConnectionKey);
+                }
+                else
+                {
+                    globalConfig.Connection = connection;
                 }
             }
         }

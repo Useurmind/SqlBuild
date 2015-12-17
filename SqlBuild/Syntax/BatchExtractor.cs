@@ -15,7 +15,7 @@ namespace SqlBuild.Syntax
 {
     public interface IBatchExtractor
     {
-        void ExtractBatches(SqlScript script, ServerVersion serverVersion);
+        void ExtractBatches(SqlScript script);
     }
 
     public class BatchExtractor : IBatchExtractor
@@ -30,11 +30,11 @@ namespace SqlBuild.Syntax
             ParserFactory = parserFactory;
         }
 
-        public void ExtractBatches(SqlScript script, ServerVersion serverVersion)
+        public void ExtractBatches(SqlScript script)
         {
             string sqlText = script.GetSqlText();
 
-            var parser = ParserFactory.CreateParser(serverVersion);
+            var parser = ParserFactory.CreateParser();
 
             IList<ParseError> errors;
             var fragment = parser.Parse(new StringReader(sqlText), out errors);

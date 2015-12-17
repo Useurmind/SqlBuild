@@ -16,11 +16,11 @@ namespace SqlBuild.Model
         /// </summary>
         public string ScriptPattern { get; set; }
 
-        public string SessionKey { get; set; }
+        public string LoginKey { get; set; }
 
         public string ConfigurationKey { get; set; }
 
-        public SqlSession Session { get; set; }
+        public SqlLogin Login { get; set; }
 
         public SqlScriptConfiguration Configuration { get; set; }
 

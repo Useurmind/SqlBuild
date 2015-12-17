@@ -15,13 +15,10 @@ namespace SqlBuild.Syntax
         /// <summary>
         /// Create a parser for TSQL.
         /// </summary>
-        /// <param name="version">
-        /// The version of the sql server.
-        /// </param>
         /// <returns>
         /// The <see cref="TSqlParser"/>.
         /// </returns>
-        TSqlParser CreateParser(ServerVersion version);
+        TSqlParser CreateParser();
     }
 
     /// <summary>
@@ -29,18 +26,26 @@ namespace SqlBuild.Syntax
     /// </summary>
     public class ParserFactory : IParserFactory
     {
+        private ServerVersion version;
+
         /// <summary>
         /// Gets or sets the error log.
         /// </summary>
-        public ISqlBuildLog SqlBuildLog { get; set; }
+        private ISqlBuildLog log;
+
+        public ParserFactory(ISqlBuildLog log, ServerVersion serverVersion)
+        {
+            this.log = log;
+            version = serverVersion;
+        }
 
         /// <inheritdoc />
-        public TSqlParser CreateParser(ServerVersion version)
+        public TSqlParser CreateParser()
         {
             switch (version)
             {
                 case ServerVersion.None:
-                    this.SqlBuildLog.WriteSqlServerVersionNotSupported(version);
+                    this.log.WriteSqlServerVersionNotSupported(version);
                     return null;
                 case ServerVersion.SqlServer2008:
                     return new TSql100Parser(false);
@@ -52,7 +57,7 @@ namespace SqlBuild.Syntax
                     return new TSql120Parser(false);
                     break;
                 default:
-                    this.SqlBuildLog.WriteSqlServerVersionNotSupported(version);
+                    this.log.WriteSqlServerVersionNotSupported(version);
                     return null;
             }
         }

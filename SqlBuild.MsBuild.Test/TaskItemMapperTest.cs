@@ -38,11 +38,13 @@ namespace SqlBuild.MsBuild.Test
         public void a_single_named_global_configuration_is_mapped_correctly()
         {
             string projectName = "slkdfjgdsofigu";
-            string sessionKey = "sdgkjdsgsdfg";
+            string loginKey = "aslkdfjsdflgdf";
+            string connectionKey = "aslkfjhdsgdf g";
             string globalConfigurationName = "alsfjsdlkfjslk";
             var globalConfigItem = new TaskItem(globalConfigurationName);
             globalConfigItem.SetMetadata(ModelExtensions.GetMetadataName<SqlGlobalConfiguration, string>(x => x.ProjectName), projectName);
-            globalConfigItem.SetMetadata(ModelExtensions.GetMetadataName<SqlGlobalConfiguration, string>(x => x.SqlBuildInfoSessionKey), sessionKey);
+            globalConfigItem.SetMetadata(ModelExtensions.GetMetadataName<SqlGlobalConfiguration, string>(x => x.SqlBuildInfoLoginKey), loginKey);
+            globalConfigItem.SetMetadata(ModelExtensions.GetMetadataName<SqlGlobalConfiguration, string>(x => x.ConnectionKey), connectionKey);
 
             input.GlobalConfigurations = new[] { globalConfigItem };
 
@@ -52,7 +54,8 @@ namespace SqlBuild.MsBuild.Test
 
             Assert.Equal(globalConfigurationName, globalConfig.Key);
             Assert.Equal(projectName, globalConfig.ProjectName);
-            Assert.Equal(sessionKey, globalConfig.SqlBuildInfoSessionKey);
+            Assert.Equal(loginKey, globalConfig.SqlBuildInfoLoginKey);
+            Assert.Equal(connectionKey, globalConfig.ConnectionKey);
         }
 
         [Fact]
@@ -162,38 +165,16 @@ namespace SqlBuild.MsBuild.Test
         }
 
         [Fact]
-        public void single_session_with_login_and_connection_is_mapped_correctly()
-        {
-            string sessionKey = "sdflkslödfsgd";
-            string loginKey = "sdölkjsdfgdsfg";
-            string connectionKey = "dfshdgjhfdghjfhg";
-
-            var sessionItem = new TaskItem(sessionKey);
-            sessionItem.SetMetadata(ModelExtensions.GetMetadataName<SqlSession, string>(x => x.ConnectionKey), connectionKey);
-            sessionItem.SetMetadata(ModelExtensions.GetMetadataName<SqlSession, string>(x => x.LoginKey), loginKey);
-
-            input.Sessions = new[] { sessionItem };
-
-            mapper.MapTo(input, output);
-
-            var session = output.Sessions[sessionKey];
-
-            Assert.Equal(sessionKey, session.Key);
-            Assert.Equal(loginKey, session.LoginKey);
-            Assert.Equal(connectionKey, session.ConnectionKey);
-        }
-
-        [Fact]
-        public void single_script_mapping_with_session_and_configuration_is_mapped_correctly()
+        public void single_script_mapping_with_login_and_configuration_is_mapped_correctly()
         {
             string scriptMappingKey = "asflfdjgsdl";
             string scriptMappingPattern = "Adsdfgsdfg";
-            string sessionKey = "sdflkslödfsgd";
+            string loginKey = "sdflkslödfsgd";
             string configurationKey = "dfshdgjhfdghjfhg";
 
             var mappingItem = new TaskItem(scriptMappingKey);
             mappingItem.SetMetadata(ModelExtensions.GetMetadataName<SqlScriptMapping, string>(x => x.ScriptPattern), scriptMappingPattern);
-            mappingItem.SetMetadata(ModelExtensions.GetMetadataName<SqlScriptMapping, string>(x => x.SessionKey), sessionKey);
+            mappingItem.SetMetadata(ModelExtensions.GetMetadataName<SqlScriptMapping, string>(x => x.LoginKey), loginKey);
             mappingItem.SetMetadata(ModelExtensions.GetMetadataName<SqlScriptMapping, string>(x => x.ConfigurationKey), configurationKey);
 
             input.ScriptMappings = new[] { mappingItem };
@@ -203,7 +184,7 @@ namespace SqlBuild.MsBuild.Test
             var mapping = output.ScriptMappings[scriptMappingKey];
 
             Assert.Equal(scriptMappingPattern, mapping.ScriptPattern);
-            Assert.Equal(sessionKey, mapping.SessionKey);
+            Assert.Equal(loginKey, mapping.LoginKey);
             Assert.Equal(configurationKey, mapping.ConfigurationKey);
         }
 

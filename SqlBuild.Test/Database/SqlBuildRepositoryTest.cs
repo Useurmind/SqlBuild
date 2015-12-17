@@ -23,16 +23,15 @@ namespace SqlBuild.Test.Data
 
         public SqlBuildRepositoryTest()
         {
-            session = new SqlSession()
-                              {
-                                  Login = new SqlLogin() { UserName = "JochenGruen", Password = "admin" },
-                                  Connection =
+            session = new SqlSession(
+                                  login: new SqlLogin() { UserName = "JochenGruen", Password = "admin" },
+                                  connection:
                                       new SqlBuild.Model.SqlConnection()
                                           {
                                               Server = "192.168.126.50",
                                               Database = "SqlBuildTest"
                                           }
-                              };
+                              );
 
             connection = session.OpenDBConnection();
 
@@ -40,9 +39,9 @@ namespace SqlBuild.Test.Data
                 session: session,
                 batchExtractor: new BatchExtractor(
                     log: new ExceptionSqlBuildLog(),
-                    parserFactory: new ParserFactory()
+                    parserFactory: new ParserFactory(new ExceptionSqlBuildLog(), ServerVersion.SqlServer2014)
                     ),
-                scriptExecutor: new ScriptExecutor(connection));
+                scriptExecutor: new ScriptExecutor(session));
         }
 
         [Fact]

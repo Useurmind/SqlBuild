@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Container\ContainerFactory.cs" />
+    <Compile Include="Container\SessionFactory.cs" />
     <Compile Include="Database\SqlBuildRepository.cs" />
     <Compile Include="Database\ScriptExecutor.cs" />
     <Compile Include="Database\ConnectionStringFactory.cs" />

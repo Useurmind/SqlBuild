@@ -15,15 +15,19 @@ namespace SqlBuild.Model
         public string ProjectName { get; set; }
 
         /// <summary>
-        /// Gets or sets the session key that is used to manage the SQL build information
+        /// Gets or sets the login key that is used to manage the SQL build information
         /// inside the database (must be able to create, query and update tables and schemas).
         /// </summary>
-        public string SqlBuildInfoSessionKey { get; set; }
+        public string SqlBuildInfoLoginKey { get; set; }
+
+        public string ConnectionKey { get; set; }
 
         /// <summary>
         /// Gets or sets the SQL build information session.
-        /// <see cref="SqlBuildInfoSessionKey"/>.
+        /// <see cref="SqlBuildInfoLoginKey"/>.
         /// </summary>
-        public SqlSession SqlBuildInfoSession { get; set; }
+        public SqlLogin SqlBuildInfoLogin { get; set; }
+
+        public SqlConnection Connection { get; set; }
     }
 }
